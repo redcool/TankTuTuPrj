@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Game.Runtime.ValueObject;
+using Game.Runtime.ValueObject.ScriptableObjects;
 
 /// <summary>
 /// 战车控制器 - 负责战车移动、转向和属性管理
@@ -21,6 +22,9 @@ namespace Game.Runtime.Controller
 
         [Header("坦克预制体")]
         [SerializeField] private GameObject _tankPrefab = null!;
+
+        [Header("战车数据 (ScriptableObject)")]
+        [SerializeField] private TankDataSO _tankDataSO;
 
         [Header("组件缓存")]
         [SerializeField] private Transform _weaponSlotsRoot;
@@ -46,11 +50,13 @@ namespace Game.Runtime.Controller
         // 生命周期
         private void Awake()
         {
-            CacheComponents();
+            // 先初始化数据，再缓存组件（确保数据可用）
             InitializeData();
+            CacheComponents();
+            // 流程更新：先实例化坦克，再查找slots，再初始化其他
+            InstantiateTank();
             SetupWeaponSlots();
             SetupInput();
-            InstantiateTank();
         }
 
         private void OnEnable()
@@ -129,6 +135,9 @@ namespace Game.Runtime.Controller
                 _tankInstance.transform.localRotation = Quaternion.identity;
                 
                 Debug.Log($"[TankController] 已生成坦克模型到 Model_Container: {_tankInstance.name}");
+
+                // 从实例化的坦克中查找武器槽位
+                FindWeaponSlotsFromInstance();
             }
             else
             {
@@ -136,11 +145,65 @@ namespace Game.Runtime.Controller
             }
         }
 
+        /// <summary>
+        /// 从实例化的坦克中查找武器槽位 (Slot0, Slot1, ...)
+        /// </summary>
+        private void FindWeaponSlotsFromInstance()
+        {
+            if (_tankInstance == null) return;
+
+            // 尝试在实例化坦克下查找名为 "WeaponSlots" 或 "Slots" 的父节点
+            Transform slotsRoot = _tankInstance.transform.Find("WeaponSlots");
+            if (slotsRoot == null)
+            {
+                slotsRoot = _tankInstance.transform.Find("Slots");
+            }
+
+            // 如果没找到父节点，尝试查找直接子级中包含 "Slot" 的
+            if (slotsRoot == null)
+            {
+                for (int i = 0; i < _tankInstance.transform.childCount; i++)
+                {
+                    Transform child = _tankInstance.transform.GetChild(i);
+                    if (child.name.Contains("Slot"))
+                    {
+                        // 找到第一个Slot，假设同级的都是Slot
+                        Transform parent = child.parent;
+                        if (parent != null && parent.childCount >= 6)
+                        {
+                            slotsRoot = parent;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (slotsRoot != null)
+            {
+                _weaponSlotsRoot = slotsRoot;
+                Debug.Log($"[TankController] 找到武器槽位根节点: {slotsRoot.name}");
+            }
+            else
+            {
+                Debug.LogWarning("[TankController] 未找到武器槽位，请检查预制体配置");
+            }
+        }
+
         private void InitializeData()
         {
             if (_tankData == null)
             {
-                _tankData = new TankDataValue();
+                // 优先使用SO，如果没有则创建默认的
+                if (_tankDataSO != null)
+                {
+                    _tankData = _tankDataSO.ToDataValue();
+                    Debug.Log($"[TankController] 从SO加载战车数据: {_tankDataSO.name}");
+                }
+                else
+                {
+                    _tankData = new TankDataValue();
+                    Debug.LogWarning("[TankController] 未配置TankDataSO，使用默认数据");
+                }
             }
         }
 

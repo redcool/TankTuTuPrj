@@ -190,6 +190,8 @@ namespace Game.Runtime.ValueObject
         {
             float damage = _damage;
 
+            if (tankData == null) return damage;
+
             // 百分比伤害加成
             damage *= (1 + tankData.PercentDamage / 100f);
 
@@ -215,6 +217,7 @@ namespace Game.Runtime.ValueObject
         /// </summary>
         public float GetFinalRange(TankDataValue tankData)
         {
+            if (tankData == null) return _range;
             return _range + tankData.Range;
         }
     }

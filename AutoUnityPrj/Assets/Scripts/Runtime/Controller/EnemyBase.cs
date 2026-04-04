@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Game.Runtime.ValueObject;
+using Game.Runtime.ValueObject.ScriptableObjects;
 
 namespace Game.Runtime.Controller
 {
@@ -16,14 +17,15 @@ namespace Game.Runtime.Controller
         private const float TARGET_UPDATE_INTERVAL = 0.5f;
 
         // 序列化字段
-        [Header("数据")]
-        [SerializeField] protected EnemyDataValue _enemyData;
+        [Header("敌人数据 (ScriptableObject)")]
+        [SerializeField] protected EnemyDataSO _enemyDataSO;
 
         [Header("组件")]
         [SerializeField] protected Transform _target;
         [SerializeField] protected NavMeshAgent _navAgent;
 
         // 私有字段
+        protected EnemyDataValue _enemyData;
         private float _lastAttackTime;
         private float _targetUpdateTimer;
 
@@ -33,8 +35,9 @@ namespace Game.Runtime.Controller
 
         protected virtual void Awake()
         {
-            CacheComponents();
+            // 先初始化数据，再缓存组件（组件配置依赖数据）
             InitializeData();
+            CacheComponents();
         }
 
         protected virtual void Start()
@@ -80,7 +83,17 @@ namespace Game.Runtime.Controller
         {
             if (_enemyData == null)
             {
-                _enemyData = new EnemyDataValue();
+                // 优先使用SO
+                if (_enemyDataSO != null)
+                {
+                    _enemyData = _enemyDataSO.ToDataValue();
+                    Debug.Log($"[EnemyBase] 从SO加载敌人数据: {_enemyDataSO.name}");
+                }
+                else
+                {
+                    _enemyData = new EnemyDataValue();
+                    Debug.LogWarning("[EnemyBase] 未配置EnemyDataSO，使用默认数据");
+                }
             }
         }
 

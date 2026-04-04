@@ -26,6 +26,7 @@ namespace Game.Runtime.ValueObject
         [SerializeField] private float _attackSpeed = 5f;
         [SerializeField] private float _critRate = 5f;
         [SerializeField] private float _range = 5f;
+        [SerializeField] private float _aimAccuracy = 0.85f;  // 瞄准精度阈值（点乘值）
 
         // 防御属性
         [SerializeField] private int _armor = 0;
@@ -107,6 +108,12 @@ namespace Game.Runtime.ValueObject
         {
             get => _range;
             set => _range = Mathf.Max(0, value);
+        }
+
+        public float AimAccuracy
+        {
+            get => _aimAccuracy;
+            set => _aimAccuracy = Mathf.Clamp(value, 0f, 1f);
         }
 
         public int Armor
