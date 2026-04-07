@@ -23,11 +23,14 @@ namespace Game.Runtime.Controller
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private HUDView _hudView;
         [SerializeField] private TankController[] _playerTanks;
+        [SerializeField] private ResultView _resultView;
 
         // 私有字段
         private float _remainingTime;
         private bool _isLevelActive;
         private bool _isLevelComplete;
+        private int _totalKills;
+        private float _timeUsed;
 
         // 公有属性
         public float RemainingTime => _remainingTime;
@@ -62,6 +65,15 @@ namespace Game.Runtime.Controller
             set => _hudView = value;
         }
 
+        /// <summary>
+        /// 结算视图（setter供SceneInitializer调用）
+        /// </summary>
+        public ResultView ResultViewRef
+        {
+            get => _resultView;
+            set => _resultView = value;
+        }
+
         // 事件
         public delegate void LevelEvent();
         public static event LevelEvent OnLevelStart;
@@ -75,8 +87,12 @@ namespace Game.Runtime.Controller
 
         private void Start()
         {
-            // 自动开始关卡
-            StartLevel();
+            // 注册结算按钮事件
+            if (_resultView != null)
+            {
+                _resultView.OnContinue += OnContinueClicked;
+                _resultView.OnReturn += OnReturnClicked;
+            }
         }
 
         /// <summary>
@@ -138,9 +154,53 @@ namespace Game.Runtime.Controller
 
             _isLevelComplete = true;
             _isLevelActive = false;
+            _timeUsed = _levelDuration - _remainingTime;
+
+            // 统计击杀
+            _totalKills = _enemySpawner != null ? _enemySpawner.EnemiesKilled : 0;
+
             OnLevelComplete?.Invoke();
 
-            Debug.Log($"[LevelManager] 关卡 {_levelNumber} 完成！");
+            // 显示结算界面
+            ShowResult();
+
+            Debug.Log($"[LevelManager] 关卡 {_levelNumber} 完成！击杀: {_totalKills}, 用时: {_timeUsed:F1}s");
+        }
+
+        /// <summary>
+        /// 显示结算界面
+        /// </summary>
+        private void ShowResult()
+        {
+            if (_hudView != null)
+            {
+                _hudView.Hide();
+            }
+
+            if (_resultView != null)
+            {
+                int playerResource = GameManager.Instance?.GetResource(0) ?? 0;
+                _resultView.ShowResult(_isLevelComplete, _totalKills, playerResource, _timeUsed);
+            }
+        }
+
+        /// <summary>
+        /// 继续下一关
+        /// </summary>
+        private void OnContinueClicked()
+        {
+            _levelNumber++;
+            ResetLevel();
+            StartLevel();
+        }
+
+        /// <summary>
+        /// 返回主菜单
+        /// </summary>
+        private void OnReturnClicked()
+        {
+            Debug.Log("[LevelManager] 返回主菜单");
+            // TODO: 加载主菜单场景
         }
 
         private void Update()

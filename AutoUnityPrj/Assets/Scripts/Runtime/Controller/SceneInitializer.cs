@@ -21,6 +21,10 @@ namespace Game.Runtime.Controller
         {
             // GameManager.Instance 在 Awake 中设置，Start 中调用确保实例已就绪
             InitializeGameManager();
+
+            // 所有引用连接完成后开始关卡
+            var levelManager = FindObjectOfType<LevelManager>();
+            levelManager?.StartLevel();
         }
 
         /// <summary>
@@ -98,6 +102,13 @@ namespace Game.Runtime.Controller
             if (tanks.Length > 0)
             {
                 levelManager.PlayerTanks = tanks;
+            }
+
+            // 查找并设置ResultView
+            var resultView = FindObjectOfType<Game.Runtime.View.ResultView>();
+            if (resultView != null)
+            {
+                levelManager.ResultViewRef = resultView;
             }
 
             Debug.Log("[SceneInitializer] LevelManager 初始化完成");
