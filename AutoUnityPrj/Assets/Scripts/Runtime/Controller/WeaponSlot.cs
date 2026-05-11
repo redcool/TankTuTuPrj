@@ -58,7 +58,7 @@ namespace Game.Runtime.Controller
             // 如果没配置SO，使用默认武器
             else if (_slotIndex == 0 && _defaultWeaponPrefab != null && !HasWeapon)
             {
-                var defaultData = new WeaponDataValue("default_blaster", "默认机枪", WeaponType.Ranged, 10f, 2f, 8f);
+                var defaultData = new WeaponDataValue("default_blaster", "默认机关炮", WeaponType.Gatling, 10f, 2f, 8f);
                 InstallWeapon(defaultData, _defaultWeaponPrefab);
             }
         }

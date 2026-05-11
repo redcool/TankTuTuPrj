@@ -1,69 +1,87 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using Game.Runtime.ValueObject.ScriptableObjects;
 
 namespace Game.Runtime.View
 {
     /// <summary>
-    /// 角色卡片 - 显示在角色选择界面中的单个角色项
-    /// 参考土豆兄弟的角色网格布局
+    /// 角色卡片 - 显示角色头像的卡片
+    /// 鼠标悬停显示详情，点击确认选择
     /// </summary>
-    public class CharacterCard : MonoBehaviour
+    public class CharacterCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("UI引用")]
         [SerializeField] private Image _iconImage;
-        [SerializeField] private Text _nameText;
-        [SerializeField] private Text _statsText;
         [SerializeField] private Image _lockOverlay;
-        [SerializeField] private Text _unlockText;
-        [SerializeField] private Button _selectButton;
+        [SerializeField] private Image _selectedHighlight;
 
-        private ValueObject.ScriptableObjects.CharacterDataSO _characterData;
+        private CharacterDataSO _characterData;
         private bool _isSelected;
 
-        public System.Action<ValueObject.ScriptableObjects.CharacterDataSO> OnCharacterSelected;
+        // 事件
+        public System.Action<CharacterDataSO> OnCharacterSelected;
+        public System.Action<CharacterDataSO> OnCharacterHovered;
 
         /// <summary>
         /// 初始化角色卡片
         /// </summary>
-        public void Initialize(ValueObject.ScriptableObjects.CharacterDataSO characterData)
+        public void Initialize(CharacterDataSO characterData)
         {
             _characterData = characterData;
 
-            if (_nameText != null)
-                _nameText.text = characterData.characterName;
-
             if (_iconImage != null)
             {
-                _iconImage.sprite = characterData.icon;
-                _iconImage.enabled = characterData.icon != null;
+                _iconImage.sprite = characterData.Icon;
+                _iconImage.enabled = characterData.Icon != null;
             }
 
             bool isUnlocked = characterData.IsUnlocked();
 
-            if (_statsText != null && isUnlocked)
-                _statsText.text = characterData.GetStatsDescription();
-
             if (_lockOverlay != null)
                 _lockOverlay.gameObject.SetActive(!isUnlocked);
 
-            if (_unlockText != null)
-            {
-                _unlockText.gameObject.SetActive(!isUnlocked);
-                if (!isUnlocked)
-                    _unlockText.text = characterData.unlockCondition;
-            }
+            if (_selectedHighlight != null)
+                _selectedHighlight.gameObject.SetActive(false);
 
-            if (_selectButton != null)
+            // 点击事件
+            var btn = GetComponent<Button>();
+            if (btn != null)
             {
-                _selectButton.interactable = isUnlocked;
-                _selectButton.onClick.RemoveAllListeners();
-                _selectButton.onClick.AddListener(OnCardClicked);
+                btn.interactable = isUnlocked;
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(OnCardClicked);
             }
         }
 
+        /// <summary>
+        /// 鼠标进入 - 悬停显示详情
+        /// </summary>
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            Debug.Log($"[CharacterCard] 悬停: {_characterData.CharacterName}");
+            OnCharacterHovered?.Invoke(_characterData);
+        }
+
+        /// <summary>
+        /// 鼠标离开
+        /// </summary>
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            // 可以选择是否清除详情显示
+        }
+
+        /// <summary>
+        /// 点击 - 确认选择
+        /// </summary>
         private void OnCardClicked()
         {
             _isSelected = true;
+
+            if (_selectedHighlight != null)
+                _selectedHighlight.gameObject.SetActive(true);
+
+            Debug.Log($"[CharacterCard] 确认选择: {_characterData.CharacterName}");
             OnCharacterSelected?.Invoke(_characterData);
         }
 
@@ -73,7 +91,23 @@ namespace Game.Runtime.View
         public void SetSelected(bool selected)
         {
             _isSelected = selected;
-            // 可以在这里添加选中视觉效果
+            if (_selectedHighlight != null)
+                _selectedHighlight.gameObject.SetActive(selected);
         }
+
+        /// <summary>
+        /// 清除选中状态
+        /// </summary>
+        public void ClearSelection()
+        {
+            _isSelected = false;
+            if (_selectedHighlight != null)
+                _selectedHighlight.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// 获取角色数据
+        /// </summary>
+        public CharacterDataSO GetCharacterData() => _characterData;
     }
 }

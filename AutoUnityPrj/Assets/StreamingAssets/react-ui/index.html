@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>战车性能面板 — 末法纪元</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  /* ── Reset & Base ── */
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  :root {
+    --bg-deep: #0a0a0a;
+    --bg-panel: #111111;
+    --bg-card: #1a1a1a;
+    --bg-card-hover: #222222;
+    --border-rust: #3a2a1a;
+    --border-glow: #8b4513;
+    --ember: #ff6a00;
+    --ember-dim: #cc5500;
+    --ember-bright: #ff9500;
+    --ash: #8a8080;
+    --ash-light: #a89f9f;
+    --text-primary: #e8ddd0;
+    --text-secondary: #8a8080;
+    --text-dim: #5a5555;
+    --health-green: #4a7a3a;
+    --health-red: #8b2a2a;
+    --mana-blue: #2a4a6b;
+    --armor-gray: #5a5a6a;
+    --speed-orange: #d4720a;
+    --fire-red: #9b1a1a;
+    --special-purple: #6a3a7a;
+    --glow-ember: 0 0 12px rgba(255,106,0,0.4), 0 0 30px rgba(255,106,0,0.15);
+    --glow-soft: 0 4px 20px rgba(0,0,0,0.6);
+    --radius: 6px;
+    --radius-lg: 10px;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── Background Atmosphere ── */
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(139,69,19,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,42,42,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 90%, rgba(255,106,0,0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating ash particles */
+
+  .ash-particle {
+    position: fixed;
+    width: 2px;
+    height: 2px;
+    background: rgba(255,106,0,0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: ashFloat linear infinite;
+    box-shadow: 0 0 6px rgba(255,106,0,0.15);
+  }
+
+  @keyframes ashFloat {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-100vh) translateX(80px) rotate(360deg); opacity: 0; }
+  }
+
+  /* ── Layout ── */
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* ── Header / Title Bar ── */
+
+  .header {
+    text-align: center;
+    padding: 32px 0 28px;
+    position: relative;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-rust), var(--ember), var(--border-rust), transparent);
+  }
+
+  .chariot-icon {
+    width: 72px; height: 72px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border-rust);
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #1e1510, #0d0b09);
+    box-shadow: var(--glow-ember), inset 0 1px 0 rgba(255,255,255,0.03);
+    position: relative;
+  }
+
+  .chariot-icon svg { width:36px; height:36px; }
+
+  .chariot-name {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    background: linear-gradient(180deg, #e8c8a0 0%, #a07040 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    position: relative;
+  }
+
+  .chariot-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 4px;
+    margin-top: 4px;
+  }
+
+  /* ── Score Overview ── */
+
+  .score-overview {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 32px 0 28px;
+  }
+
+  .score-main {
+    text-align: center;
+  }
+
+  .score-ring {
+    width: 100px; height: 100px;
+    margin: 0 auto 8px;
+    position: relative;
+  }
+
+  .score-ring svg {
+    width: 100%; height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .score-ring .bg { fill: none; stroke: var(--bg-card); stroke-width:6; }
+
+  .score-ring .fg { fill: none; stroke: var(--ember); stroke-width:6; stroke-linecap: round;
+    filter: drop-shadow(0 0 4px rgba(255,106,0,0.5));
+    transition: stroke-dashoffset 1.5s ease-out; }
+
+  .score-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--ember);
+    text-shadow: 0 0 20px rgba(255,106,0,0.4);
+  }
+
+  .score-label { font-size: 12px; color: var(--text-secondary); letter-spacing: 2px; }
+
+  .score-bars { display: flex; flex-direction: column; gap: 14px; }
+
+  .score-bar-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 40px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .score-bar-label {
+    font-size: 13px;
+    color: var(--ash-light);
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .score-bar-track {
+    height: 6px;
+    background: var(--bg-card);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+  }
+
+  .score-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: -1px;
+    width: 12px; height: calc(100% + 2px);
+    background: inherit;
+    filter: brightness(2);
+    border-radius: 50%;
+    box-shadow: 0 0 10px currentColor;
+  }
+
+  .score-bar-val {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bar-speed { background: linear-gradient(90deg, #6b3a1a, var(--speed-orange)); }
+
+  .bar-speed-fill { background: linear-gradient(90deg, #6b3a1a, var(--speed-orange)); color: var(--speed-orange); }
+
+  .bar-defense { background: linear-gradient(90deg, #3a3a5a, var(--armor-gray)); }
+
+  .bar-defense-fill { background: linear-gradient(90deg, #3a3a5a, var(--armor-gray)); color: var(--armor-gray); }
+
+  .bar-fire { background: linear-gradient(90deg, #5a1a1a, var(--fire-red)); }
+
+  .bar-fire-fill { background: linear-gradient(90deg, #5a1a1a, var(--fire-red)); color: var(--fire-red); }
+
+  .bar-durability { background: linear-gradient(90deg, #2a4a2a, var(--health-green)); }
+
+  .bar-durability-fill { background: linear-gradient(90deg, #2a4a2a, var(--health-green)); color: var(--health-green); }
+
+  .bar-special { background: linear-gradient(90deg, #4a2a5a, var(--special-purple)); }
+
+  .bar-special-fill { background: linear-gradient(90deg, #4a2a5a, var(--special-purple)); color: var(--special-purple); }
+
+  /* ── Section ── */
+
+  .section {
+    margin: 24px 0;
+    animation: sectionIn 0.6s ease-out both;
+  }
+
+  .section:nth-child(2) { animation-delay: 0.1s; }
+
+  .section:nth-child(3) { animation-delay: 0.2s; }
+
+  .section:nth-child(4) { animation-delay: 0.3s; }
+
+  .section:nth-child(5) { animation-delay: 0.4s; }
+
+  .section:nth-child(6) { animation-delay: 0.5s; }
+
+  .section:nth-child(7) { animation-delay: 0.6s; }
+
+  @keyframes sectionIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-rust);
+  }
+
+  .section-icon {
+    width: 28px; height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-rust);
+    border-radius: 4px;
+  }
+
+  .section-icon svg { width: 16px; height: 16px; }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--text-primary);
+  }
+
+  .section-tag {
+    margin-left: auto;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .tag-orange { background: rgba(212,114,10,0.15); color: var(--speed-orange); border: 1px solid rgba(212,114,10,0.3); }
+
+  .tag-gray { background: rgba(90,90,106,0.15); color: var(--armor-gray); border: 1px solid rgba(90,90,106,0.3); }
+
+  .tag-red { background: rgba(155,26,26,0.15); color: #c44; border: 1px solid rgba(155,26,26,0.3); }
+
+  .tag-green { background: rgba(74,122,58,0.12); color: var(--health-green); border: 1px solid rgba(74,122,58,0.3); }
+
+  .tag-purple { background: rgba(106,58,122,0.12); color: #9a6ab0; border: 1px solid rgba(106,58,122,0.3); }
+
+  /* ── Stats Panel Card ── */
+
+  .stat-card {
+    background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+    border: 1px solid var(--border-rust);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: var(--glow-soft);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,106,0,0.2), transparent);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-item {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(58,42,26,0.3);
+    border-radius: var(--radius);
+    padding: 12px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .stat-item:hover {
+    background: rgba(139,69,19,0.08);
+    border-color: rgba(139,69,19,0.4);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-value.orange { color: var(--ember); }
+
+  .stat-value.red { color: #c44; }
+
+  .stat-value.green { color: var(--health-green); }
+
+  .stat-value.gray { color: var(--armor-gray); }
+
+  .stat-value.blue { color: #4a7a9b; }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* ── Detailed Metrics ── */
+
+  .metrics-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .metric-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 40px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .metric-name {
+    font-size: 13px;
+    color: var(--ash-light);
+    font-weight: 400;
+  }
+
+  .metric-track {
+    height: 8px;
+    background: var(--bg-deep);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(58,42,26,0.2);
+    position: relative;
+  }
+
+  .metric-track-inner {
+    height: 100%;
+    border-radius: 3px;
+    position: relative;
+    transition: width 1s ease-out;
+  }
+
+  .metric-track-inner::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 20%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15));
+    border-radius: 0 3px 3px 0;
+  }
+
+  .metric-val {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── HP / MP Bar ── */
+
+  .vital-bars { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+
+  .vital-bar {
+    display: grid;
+    grid-template-columns: 70px 1fr 50px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .vital-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .vital-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .vital-track {
+    height: 14px;
+    background: var(--bg-deep);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(58,42,26,0.2);
+    position: relative;
+  }
+
+  .vital-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1.5s ease-out;
+    position: relative;
+  }
+
+  .vital-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%);
+    border-radius: 2px;
+  }
+
+  .vital-value {
+    font-size: 13px;
+    font-weight: 700;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ash-light);
+  }
+
+  /* ── Equipment Slots ── */
+
+  .equip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .equip-slot {
+    background: rgba(0,0,0,0.3);
+    border: 1px dashed rgba(58,42,26,0.3);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .equip-slot.equipped {
+    border-style: solid;
+    border-color: rgba(139,69,19,0.3);
+    background: rgba(139,69,19,0.04);
+  }
+
+  .equip-slot:hover { border-color: rgba(139,69,19,0.5); }
+
+  .equip-icon {
+    width: 36px; height: 36px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-deep);
+    border: 1px solid var(--border-rust);
+    border-radius: 4px;
+  }
+
+  .equip-icon svg { width: 18px; height: 18px; }
+
+  .equip-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ember);
+    margin-bottom: 4px;
+  }
+
+  .equip-name.empty { color: var(--text-dim); }
+
+  .equip-stat {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── Special Abilities ── */
+
+  .ability-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .ability-card {
+    background: linear-gradient(135deg, rgba(106,58,122,0.06), rgba(0,0,0,0.3));
+    border: 1px solid rgba(106,58,122,0.2);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ability-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--special-purple), transparent);
+  }
+
+  .ability-card:hover {
+    border-color: rgba(106,58,122,0.5);
+    transform: translateY(-2px);
+  }
+
+  .ability-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #b07ad0;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ability-type {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 2px;
+    background: rgba(106,58,122,0.2);
+    color: #9a6ab0;
+  }
+
+  .ability-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 6px 0;
+  }
+
+  .ability-cooldown {
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(58,42,26,0.15);
+  }
+
+  /* ── Weaknesses ── */
+
+  .weakness-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .weakness-tag {
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: #a04040;
+    background: rgba(139,42,42,0.08);
+    border: 1px solid rgba(139,42,42,0.2);
+  }
+
+  /* ── Footer ── */
+
+  .footer {
+    margin-top: 32px;
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid var(--border-rust);
+  }
+
+  .footer-text {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+  }
+
+  /* ── Ember Glow Pulse ── */
+
+  @keyframes emberPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .ember-pulse { animation: emberPulse 2s ease-in-out infinite; }
+
+  /* ── Responsive ── */
+
+  @media (max-width: 640px) {
+    .container { padding: 12px 10px 40px; }
+    .score-overview { grid-template-columns: 1fr; gap: 20px; margin: 20px 0; }
+    .score-bars { padding-left: 0; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat-value { font-size: 18px; }
+    .metric-row { grid-template-columns: 80px 1fr 36px; gap: 8px; }
+    .equip-grid { grid-template-columns: repeat(2, 1fr); }
+    .ability-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Ash Particles ── -->
+<div id="ashContainer"></div>
+
+<div class="container">
+
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="chariot-icon">
+      <span class="ember-pulse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#cc8844" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 20c2-4 6-6 9-6s7 2 9 6"/>
+        <path d="M12 14V4"/>
+        <path d="M8 6h8"/>
+        <circle cx="12" cy="14" r="3"/>
+        <path d="M6 20l-2-3"/>
+        <path d="M18 20l2-3"/>
+        <path d="M4 20h16"/>
+      </svg>
+      </span>
+    </div>
+    <div class="chariot-name">焚 骨 战 车</div>
+    <div class="chariot-sub">BONE-CHRNSER · 等级 47 · 史诗稀有</div>
+  </div>
+
+  <!-- ── Score Overview ── -->
+  <div class="score-overview">
+    <div class="score-main">
+      <div class="score-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="bg" cx="50" cy="50" r="42"/>
+          <circle class="fg" cx="50" cy="50" r="42" stroke-dasharray="263.89" stroke-dashoffset="65.97" id="scoreRing"/>
+        </svg>
+        <div class="score-value" id="scoreDisplay">0</div>
+      </div>
+      <div class="score-label">综 合 评 分</div>
+    </div>
+
+    <div class="score-bars">
+      <div class="score-bar-row">
+        <div class="score-bar-label">速度/机动</div>
+        <div class="score-bar-track"><div class="score-bar-fill bar-speed-fill" style="width:0%" data-target="82"></div></div>
+        <div class="score-bar-val" style="color:var(--speed-orange)">82</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label">防御/护甲</div>
+        <div class="score-bar-track"><div class="score-bar-fill bar-defense-fill" style="width:0%" data-target="90"></div></div>
+        <div class="score-bar-val" style="color:var(--armor-gray)">90</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label">火力/攻击</div>
+        <div class="score-bar-track"><div class="score-bar-fill bar-fire-fill" style="width:0%" data-target="75"></div></div>
+        <div class="score-bar-val" style="color:#c44">75</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label">耐久/维护</div>
+        <div class="score-bar-track"><div class="score-bar-fill bar-durability-fill" style="width:0%" data-target="68"></div></div>
+        <div class="score-bar-val" style="color:var(--health-green)">68</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label">特殊能力</div>
+        <div class="score-bar-track"><div class="score-bar-fill bar-special-fill" style="width:0%" data-target="95"></div></div>
+        <div class="score-bar-val" style="color:#9a6ab0">95</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="text-align:center; margin-bottom: 16px;">
+        <div style="font-size:11px; color:var(--text-dim); letter-spacing:2px;">评级</div>
+        <div style="font-size:36px; font-weight:900; color:#b07ad0; text-shadow:0 0 20px rgba(106,58,122,0.4);">A+</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:11px; color:var(--text-dim); letter-spacing:2px;">战力</div>
+        <div style="font-size:24px; font-weight:700; color:var(--ember);">12,840</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HP/MP ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c44" stroke-width="2"><path d="M12 21C12 21 3 13.5 3 8.5 3 5.42 5.42 3 8.5 3c1.74 0 3.41.81 4.5 2.09A5.99 5.99 0 0117.5 3C20.58 3 23 5.42 23 8.5 23 13.5 12 21 12 21z"/></svg>
+      </div>
+      <div class="section-title">生 命 力</div>
+      <span class="section-tag tag-red">战斗状态</span>
+    </div>
+    <div class="stat-card">
+      <div class="vital-bars">
+        <div class="vital-bar">
+          <div class="vital-label" style="color:#c44"><span class="dot" style="background:#c44"></span>HP</div>
+          <div class="vital-track"><div class="vital-fill" style="width:0%;background:linear-gradient(90deg,#5a1a1a,#c44,#e66);" id="hpBar"></div></div>
+          <div class="vital-value" id="hpVal">18,200 / 20,000</div>
+        </div>
+        <div class="vital-bar">
+          <div class="vital-label" style="color:#4a7a9b"><span class="dot" style="background:#4a7a9b"></span>MP</div>
+          <div class="vital-track"><div class="vital-fill" style="width:0%;background:linear-gradient(90deg,#1a3a5a,#4a7a9b,#6ab4e6);" id="mpBar"></div></div>
+          <div class="vital-value" id="mpVal">6,800 / 8,000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SPEED ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#d4720a" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <div class="section-title">速 度 / 机 动</div>
+      <span class="section-tag tag-orange">82</span>
+    </div>
+    <div class="stat-card">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">最大速度</div>
+          <div class="stat-value orange">284</div>
+          <div class="stat-sub">km/h · 超载模式 340 km/h</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">加速性能</div>
+          <div class="stat-value orange">1.8</div>
+          <div class="stat-sub">0→100 km/h (秒)</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">转向半径</div>
+          <div class="stat-value blue">4.2</div>
+          <div class="stat-sub">米 · 履带锁定模式</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">机动灵活</div>
+          <div class="stat-value orange">78</div>
+          <div class="stat-sub">综合机动指数</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DEFENSE ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5a5a6a" stroke-width="2"><path d="M12 22s8-4 8-10V5l-7-3-7 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="section-title">防 御 / 护 甲</div>
+      <span class="section-tag tag-gray">90</span>
+    </div>
+    <div class="stat-card">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">正面护甲</div>
+          <div class="stat-value gray">340</div>
+          <div class="stat-sub">mm 复合陶瓷装甲</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">侧面前线护甲</div>
+          <div class="stat-value gray">220</div>
+          <div class="stat-sub">mm</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">能量护盾</div>
+          <div class="stat-value" style="color:var(--mana-blue)">1,200</div>
+          <div class="stat-sub">护盾能量 / 回复速率 15/s</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">装甲耐久</div>
+          <div class="stat-value green">87%</div>
+          <div class="stat-sub">整体结构完整性</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FIREPOWER ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c44" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </div>
+      <div class="section-title">火 力 / 攻 击</div>
+      <span class="section-tag tag-red">75</span>
+    </div>
+    <div class="stat-card">
+      <div class="metrics-list">
+        <div class="metric-row">
+          <div class="metric-name">主炮 · 骨燃加农</div>
+          <div class="metric-track"><div class="metric-track-inner" style="width:0%;background:linear-gradient(90deg,#5a1a1a,#c44);" data-w="85"></div></div>
+          <div class="metric-val" style="color:#c44">850</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-name">副武器 · 腐蚀霰弹</div>
+          <div class="metric-track"><div class="metric-track-inner" style="width:0%;background:linear-gradient(90deg,#5a1a1a,#c44);" data-w="62"></div></div>
+          <div class="metric-val" style="color:#c44">620</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-name">射程</div>
+          <div class="metric-track"><div class="metric-track-inner" style="width:0%;background:linear-gradient(90deg,#3a3a5a,#6a6a8a);" data-w="55"></div></div>
+          <div class="metric-val" style="color:#8a8aaa">2,400m</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-name">射速</div>
+          <div class="metric-track"><div class="metric-track-inner" style="width:0%;background:linear-gradient(90deg,#3a3a5a,#6a6a8a);" data-w="70"></div></div>
+          <div class="metric-val" style="color:#8a8aaa">4.5 rds/min</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-name">装弹容量</div>
+          <div class="metric-track"><div class="metric-track-inner" style="width:0%;background:linear-gradient(90deg,#3a3a5a,#6a6a8a);" data-w="50"></div></div>
+          <div class="metric-val" style="color:#8a8aaa">36 / 12 发</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DURABILITY ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4a7a3a" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="section-title">耐 久 / 维 护</div>
+      <span class="section-tag tag-green">68</span>
+    </div>
+    <div class="stat-card">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">结构完整</div>
+          <div class="stat-value green">87%</div>
+          <div class="stat-sub">主骨架 · 腐蚀等级 B</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">发动机状态</div>
+          <div class="stat-value orange">72%</div>
+          <div class="stat-sub">骨焰引擎 · 下次大修 42h</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">燃料储备</div>
+          <div class="stat-value orange">78%</div>
+          <div class="stat-sub">燃骸液 312L / 400L</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">维修时间</div>
+          <div class="stat-value green">3.2</div>
+          <div class="stat-sub">小时 · 野战修复</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ EQUIPMENT ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#cc8844" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <div class="section-title">装 备 栏</div>
+      <span class="section-tag tag-orange">6/6</span>
+    </div>
+    <div class="stat-card">
+      <div class="equip-grid">
+        <div class="equip-slot equipped">
+          <div class="equip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#cc8844" stroke-width="2"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/></svg>
+          </div>
+          <div class="equip-name">骨甲覆层 II</div>
+          <div class="equip-stat">防御+120<br/>腐蚀抗性+30%</div>
+        </div>
+        <div class="equip-slot equipped">
+          <div class="equip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#cc8844" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="equip-name">燃骸反应堆</div>
+          <div class="equip-stat">输出+200<br/>续航+35%</div>
+        </div>
+        <div class="equip-slot equipped">
+          <div class="equip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#cc8844" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="equip-name">时滞齿轮组</div>
+          <div class="equip-stat">充能速度+50<br/>机动+15%</div>
+        </div>
+        <div class="equip-slot equipped">
+          <div class="equip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#cc8844" stroke-width="2"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z"/><path d="M8 12h8M12 8v8"/></svg>
+          </div>
+          <div class="equip-name">蚀骨炮管</div>
+          <div class="equip-stat">火力+180<br/>弹道扩散-20%</div>
+        </div>
+        <div class="equip-slot equipped">
+          <div class="equip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#cc8844" stroke-width="2"><path d="M12 22V8"/><path d="M5 12l7-8 7 8"/></svg>
+          </div>
+          <div class="equip-name">符文驱动履带</div>
+          <div class="equip-stat">地形适应+40<br/>静音模式</div>
+        </div>
+        <div class="equip-slot equipped">
+          <div class="equip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#cc8844" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
+          </div>
+          <div class="equip-name">灵魂共鸣核心</div>
+          <div class="equip-stat">全属性+8%<br/>技能伤害+25%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SPECIAL ABILITIES ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9a6ab0" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div class="section-title">特 殊 能 力</div>
+      <span class="section-tag tag-purple">95</span>
+    </div>
+    <div class="stat-card">
+      <div class="ability-grid">
+        <div class="ability-card">
+          <div class="ability-name">焚骨爆发 <span class="ability-type">主动</span></div>
+          <div class="ability-desc">引爆骨焰引擎，10秒内速度+40%，装甲燃烧对接触单位造成持续伤害，但耐久每小时 -5%。</div>
+          <div class="ability-cooldown">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5a5555" stroke-width="2"><path d="M12 22V12M5 12l7-8 7 8"/></svg>
+            冷却时间: 4 分钟
+          </div>
+        </div>
+        <div class="ability-card">
+          <div class="ability-name">骸骨重构 <span class="ability-type">被动</span></div>
+          <div class="ability-desc">战斗中获得战意，每损失10%HP恢复1%装甲耐久，最高触发5层。</div>
+          <div class="ability-cooldown">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5a5555" stroke-width="2"><path d="M12 22V12M5 12l7-8 7 8"/></svg>
+            持续生效
+          </div>
+        </div>
+        <div class="ability-card">
+          <div class="ability-name">骨焰冲撞 <span class="ability-type">主动</span></div>
+          <div class="ability-desc">全速冲向目标，碰撞时造成 1500 点火焰伤害并击退周围敌人，对Boss型敌人伤害+200%。</div>
+          <div class="ability-cooldown">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5a5555" stroke-width="2"><path d="M12 22V12M5 12l7-8 7 8"/></svg>
+            冷却时间: 12 秒
+          </div>
+        </div>
+        <div class="ability-card">
+          <div class="ability-name">蚀骨护幕 <span class="ability-type">主动</span></div>
+          <div class="ability-desc">展开腐蚀力场，吸收 2400 点伤害并反弹 15% 给攻击者，持续 8 秒。</div>
+          <div class="ability-cooldown">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5a5555" stroke-width="2"><path d="M12 22V12M5 12l7-8 7 8"/></svg>
+            冷却时间: 30 秒
+          </div>
+        </div>
+        <div class="ability-card">
+          <div class="ability-name">亡者咆哮 <span class="ability-type">群体</span></div>
+          <div class="ability-desc">发出骸骨怒吼，使范围内敌方单位恐惧 3 秒并降低攻击力 30%，友方获得 15% 伤害加成。</div>
+          <div class="ability-cooldown">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5a5555" stroke-width="2"><path d="M12 22V12M5 12l7-8 7 8"/></svg>
+            冷却时间: 60 秒
+          </div>
+        </div>
+        <div class="ability-card">
+          <div class="ability-name">骨骸再生 <span class="ability-type">被动</span></div>
+          <div class="ability-desc">非战斗状态下每分钟自动恢复 2% HP 和 1% 装甲耐久，超载模式下恢复速度翻倍。</div>
+          <div class="ability-cooldown">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5a5555" stroke-width="2"><path d="M12 22V12M5 12l7-8 7 8"/></svg>
+            持续生效
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ WEAKNESSES ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#a04040" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86l-8.7 15.08A2 2 0 003.27 22h17.46a2 2 0 001.68-3.06l-8.7-15.08a2 2 0 00-3.42 0z"/></svg>
+      </div>
+      <div class="section-title">劣 势 / 弱 点</div>
+    </div>
+    <div class="stat-card">
+      <div class="weakness-tags">
+        <span class="weakness-tag">惧怕冰霜属性攻击</span>
+        <span class="weakness-tag">耐久下降后火力衰减</span>
+        <span class="weakness-tag">持续作战能力不足</span>
+        <span class="weakness-tag">高速转向稳定性差</span>
+        <span class="weakness-tag">燃骸液易受冲击泄漏</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <div class="footer">
+    <div class="footer-text">— 末 法 纪 元 · 战 车 资 料 库 —</div>
+  </div>
+
+</div>
+
+<script>
+// ── Ash Particles ──
+(function(){
+  const c = document.getElementById('ashContainer');
+  for(let i=0; i<20; i++){
+    const p = document.createElement('div');
+    p.className = 'ash-particle';
+    p.style.left = Math.random()*100 + '%';
+    p.style.bottom = '-20px';
+    p.style.animationDuration = (8+Math.random()*12)+'s';
+    p.style.animationDelay = (Math.random()*10)+'s';
+    p.style.width = p.style.height = (1+Math.random()*2)+'px';
+    c.appendChild(p);
+  }
+})();
+
+// ── Animate on View ──
+function animate(){
+  // Score ring & value
+  const ring = document.getElementById('scoreRing');
+  const display = document.getElementById('scoreDisplay');
+  const target = Math.round(75); // 263.89 * (1 - 0.75) = 65.97
+  ring.setAttribute('stroke-dashoffset', '65.97');
+
+  let current = 0;
+  const scoreInterval = setInterval(()=>{
+    current += 1;
+    display.textContent = current;
+    if(current >= 75) clearInterval(scoreInterval);
+  }, 20);
+
+  // Score bars
+  document.querySelectorAll('.score-bar-fill').forEach(bar=>{
+    const t = bar.dataset.target;
+    setTimeout(()=>{ bar.style.width = t+'%'; }, 300);
+  });
+
+  // HP / MP bars
+  setTimeout(()=>{
+    document.getElementById('hpBar').style.width = '91%';
+    document.getElementById('mpBar').style.width = '85%';
+  }, 500);
+
+  // Metric tracks
+  document.querySelectorAll('.metric-track-inner').forEach(el=>{
+    setTimeout(()=>{ el.style.width = el.dataset.w+'%'; }, 600);
+  });
+}
+
+// Run on load & after fonts
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(animate);
+} else {
+  window.addEventListener('DOMContentLoaded', animate);
+}
+</script>
+
+</body>
+</html>

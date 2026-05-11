@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8ae6491ac2ee7742bd3221a01a290c0, type: 3}
+  m_Name: "Difficulty_3_\u56F0\u96BE"
+  m_EditorClassIdentifier: 
+  _difficultyName: "\u56F0\u96BE"
+  _icon: {fileID: 0}
+  _description: "\u9700\u8981\u4E00\u5B9A\u6280\u5DE7\u548C\u53CD\u5E94"
+  _difficultyLevel: 3
+  _enemyCountMultiplier: 1.5
+  _enemyHpMultiplier: 1.6
+  _enemySpeedMultiplier: 1.2
+  _enemyDamageMultiplier: 1.5
+  _spawnIntervalMultiplier: 0.8
+  _dropRateMultiplier: 0.9
+  _expMultiplier: 1.3
+  _showEnemyHealthBar: 1
+  _hasEliteEnemies: 1
+  _hasBoss: 0

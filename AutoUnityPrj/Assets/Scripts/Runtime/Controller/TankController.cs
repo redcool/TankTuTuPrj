@@ -25,6 +25,15 @@ namespace Game.Runtime.Controller
 
         [Header("战车数据 (ScriptableObject)")]
         [SerializeField] private TankDataSO _tankDataSO;
+        
+        /// <summary>
+        /// 设置战车数据SO (供外部代码使用,避免反射)
+        /// </summary>
+        public TankDataSO TankDataSOSetter
+        {
+            get => _tankDataSO;
+            set => _tankDataSO = value;
+        }
 
         [Header("组件缓存")]
         [SerializeField] private Transform _weaponSlotsRoot;
@@ -205,6 +214,15 @@ namespace Game.Runtime.Controller
                     Debug.LogWarning("[TankController] 未配置TankDataSO，使用默认数据");
                 }
             }
+        }
+
+        /// <summary>
+        /// 重新初始化数据 (供外部代码调用)
+        /// </summary>
+        public void ReinitializeData()
+        {
+            _tankData = null;
+            InitializeData();
         }
 
         private void SetupWeaponSlots()

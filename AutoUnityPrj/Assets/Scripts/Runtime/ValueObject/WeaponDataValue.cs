@@ -8,13 +8,18 @@ using UnityEngine;
 namespace Game.Runtime.ValueObject
 {
     /// <summary>
-    /// 武器类型枚举
+    /// 武器类型枚举 - 战车专用武器类型
     /// </summary>
     public enum WeaponType
     {
-        Melee,       // 近战
-        Ranged,      // 远程
-        Element      // 元素
+        MainCannon,     // 主炮 - 高伤害 单发
+        Howitzer,       // 榴弹炮 - 范围伤害
+        Cannon,         // 加农炮 - 均衡输出
+        Gatling,        // 机关炮 - 快速连射
+        Missile,        // 导弹 - 高精度追踪
+        Rocket,        // 火箭弹 - 弹幕覆盖
+        Tesla,          // 电磁炮 - 链式伤害
+        Laser           // 激光炮 - 持续伤害
     }
 
     [System.Serializable]
@@ -135,7 +140,7 @@ namespace Game.Runtime.ValueObject
         {
             _weaponId = "";
             _weaponName = "";
-            _weaponType = WeaponType.Ranged;
+            _weaponType = WeaponType.MainCannon;
         }
 
         /// <summary>
@@ -198,14 +203,19 @@ namespace Game.Runtime.ValueObject
             // 类型伤害加成
             switch (_weaponType)
             {
-                case WeaponType.Melee:
-                    damage *= (1 + tankData.MeleeDamage / 100f);
-                    break;
-                case WeaponType.Ranged:
+                case WeaponType.MainCannon:
+                case WeaponType.Cannon:
                     damage *= (1 + tankData.RangedDamage / 100f);
                     break;
-                case WeaponType.Element:
+                case WeaponType.Howitzer:
+                case WeaponType.Rocket:
+                case WeaponType.Missile:
                     damage *= (1 + tankData.ElementDamage / 100f);
+                    break;
+                case WeaponType.Gatling:
+                case WeaponType.Tesla:
+                case WeaponType.Laser:
+                    damage *= (1 + tankData.MeleeDamage / 100f);
                     break;
             }
 

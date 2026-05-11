@@ -6,56 +6,156 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
     /// 角色数据 ScriptableObject - 定义可选角色的属性和初始配置
     /// 参考土豆兄弟的角色选择系统
     /// </summary>
-    [CreateAssetMenu(fileName = "NewCharacter", menuName = "IronTutu/CharacterData")]
+    [CreateAssetMenu(fileName = "NewCharacter", menuName = "铁皮突突/角色数据")]
     public class CharacterDataSO : ScriptableObject
     {
-        [Header("Basic Info")]
-        public string characterName;
-        public Sprite icon;
+        [Header("基础信息")]
+        [SerializeField] private string _characterName = "";
+        [SerializeField] private Sprite _icon;
         [TextArea(2, 3)]
-        public string description;
+        [SerializeField] private string _description = "";
 
-        [Header("Stat Bonuses")]
-        [Tooltip("Max HP bonus")]
-        public int maxHpBonus;
-        [Tooltip("Speed bonus (percentage)")]
-        public float speedBonusPercent;
-        [Tooltip("Attack speed bonus (percentage)")]
-        public float attackSpeedBonusPercent;
-        [Tooltip("Crit chance bonus")]
-        public float critChanceBonus;
-        [Tooltip("Armor bonus")]
-        public int armorBonus;
-        [Tooltip("Range bonus (percentage)")]
-        public float rangeBonusPercent;
-        [Tooltip("Luck bonus")]
-        public int luckBonus;
-        [Tooltip("Harvesting bonus")]
-        public int harvestingBonus;
+        [Header("属性加成")]
+        [Tooltip("最大生命加成")]
+        [SerializeField] private int _maxHpBonus = 0;
+        [Tooltip("移速加成(百分比)")]
+        [SerializeField] private float _speedBonusPercent = 0f;
+        [Tooltip("攻速加成(百分比)")]
+        [SerializeField] private float _attackSpeedBonusPercent = 0f;
+        [Tooltip("暴击几率加成")]
+        [SerializeField] private float _critChanceBonus = 0f;
+        [Tooltip("护甲加成")]
+        [SerializeField] private int _armorBonus = 0;
+        [Tooltip("范围加成(百分比)")]
+        [SerializeField] private float _rangeBonusPercent = 0f;
+        [Tooltip("幸运加成")]
+        [SerializeField] private int _luckBonus = 0;
+        [Tooltip("收获加成")]
+        [SerializeField] private int _harvestingBonus = 0;
 
-        [Header("Starting Weapons")]
-        [Tooltip("Resource paths for starting weapons")]
-        public string[] startingWeaponPaths;
+        [Header("初始武器")]
+        [Tooltip("初始武器资源路径")]
+        [SerializeField] private string[] _startingWeaponPaths;
 
-        [Header("Unlock")]
-        [Tooltip("Unlocked by default")]
-        public bool isUnlockedByDefault = true;
-        [Tooltip("Unlock condition text (shown when locked)")]
-        public string unlockCondition;
-        [Tooltip("Required progress value to unlock")]
-        public int unlockRequirement;
+        [Header("解锁")]
+        [Tooltip("默认解锁")]
+        [SerializeField] private bool _isUnlockedByDefault = true;
+        [Tooltip("解锁条件文本(锁定时显示)")]
+        [SerializeField] private string _unlockCondition = "";
+        [Tooltip("解锁所需进度值")]
+        [SerializeField] private int _unlockRequirement = 0;
 
-        [Header("Special Ability")]
-        [Tooltip("Special ability description")]
+        [Header("特殊能力")]
+        [Tooltip("特殊能力描述")]
         [TextArea(2, 4)]
-        public string specialAbility;
+        [SerializeField] private string _specialAbility = "";
+
+        #region Properties
+
+        public string CharacterName
+        {
+            get => _characterName;
+            set => _characterName = value;
+        }
+
+        public Sprite Icon
+        {
+            get => _icon;
+            set => _icon = value;
+        }
+
+        public string Description
+        {
+            get => _description;
+            set => _description = value;
+        }
+
+        public int MaxHpBonus
+        {
+            get => _maxHpBonus;
+            set => _maxHpBonus = value;
+        }
+
+        public float SpeedBonusPercent
+        {
+            get => _speedBonusPercent;
+            set => _speedBonusPercent = value;
+        }
+
+        public float AttackSpeedBonusPercent
+        {
+            get => _attackSpeedBonusPercent;
+            set => _attackSpeedBonusPercent = value;
+        }
+
+        public float CritChanceBonus
+        {
+            get => _critChanceBonus;
+            set => _critChanceBonus = value;
+        }
+
+        public int ArmorBonus
+        {
+            get => _armorBonus;
+            set => _armorBonus = value;
+        }
+
+        public float RangeBonusPercent
+        {
+            get => _rangeBonusPercent;
+            set => _rangeBonusPercent = value;
+        }
+
+        public int LuckBonus
+        {
+            get => _luckBonus;
+            set => _luckBonus = value;
+        }
+
+        public int HarvestingBonus
+        {
+            get => _harvestingBonus;
+            set => _harvestingBonus = value;
+        }
+
+        public string[] StartingWeaponPaths
+        {
+            get => _startingWeaponPaths;
+            set => _startingWeaponPaths = value;
+        }
+
+        public bool IsUnlockedByDefault
+        {
+            get => _isUnlockedByDefault;
+            set => _isUnlockedByDefault = value;
+        }
+
+        public string UnlockCondition
+        {
+            get => _unlockCondition;
+            set => _unlockCondition = value;
+        }
+
+        public int UnlockRequirement
+        {
+            get => _unlockRequirement;
+            set => _unlockRequirement = value;
+        }
+
+        public string SpecialAbility
+        {
+            get => _specialAbility;
+            set => _specialAbility = value;
+        }
+
+        #endregion
 
         /// <summary>
         /// 检查角色是否已解锁
         /// </summary>
         public bool IsUnlocked()
         {
-            if (isUnlockedByDefault) return true;
+            if (_isUnlockedByDefault) return true;
             // TODO: 从存档系统读取进度
             return false;
         }
@@ -67,27 +167,27 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         {
             var sb = new System.Text.StringBuilder();
 
-            if (maxHpBonus != 0)
-                sb.AppendLine(maxHpBonus > 0 ? $"+{maxHpBonus} 最大生命" : $"{maxHpBonus} 最大生命");
-            if (speedBonusPercent != 0)
-                sb.AppendLine(speedBonusPercent > 0 ? $"+{speedBonusPercent * 100:F0}% 移速" : $"{speedBonusPercent * 100:F0}% 移速");
-            if (attackSpeedBonusPercent != 0)
-                sb.AppendLine(attackSpeedBonusPercent > 0 ? $"+{attackSpeedBonusPercent * 100:F0}% 攻速" : $"{attackSpeedBonusPercent * 100:F0}% 攻速");
-            if (critChanceBonus != 0)
-                sb.AppendLine(critChanceBonus > 0 ? $"+{critChanceBonus * 100:F0}% 暴击" : $"{critChanceBonus * 100:F0}% 暴击");
-            if (armorBonus != 0)
-                sb.AppendLine(armorBonus > 0 ? $"+{armorBonus} 护甲" : $"{armorBonus} 护甲");
-            if (rangeBonusPercent != 0)
-                sb.AppendLine(rangeBonusPercent > 0 ? $"+{rangeBonusPercent * 100:F0}% 范围" : $"{rangeBonusPercent * 100:F0}% 范围");
-            if (luckBonus != 0)
-                sb.AppendLine(luckBonus > 0 ? $"+{luckBonus} 幸运" : $"{luckBonus} 幸运");
-            if (harvestingBonus != 0)
-                sb.AppendLine(harvestingBonus > 0 ? $"+{harvestingBonus} 收获" : $"{harvestingBonus} 收获");
+            if (_maxHpBonus != 0)
+                sb.AppendLine(_maxHpBonus > 0 ? $"+{_maxHpBonus} 最大生命" : $"{_maxHpBonus} 最大生命");
+            if (_speedBonusPercent != 0)
+                sb.AppendLine(_speedBonusPercent > 0 ? $"+{_speedBonusPercent * 100:F0}% 移速" : $"{_speedBonusPercent * 100:F0}% 移速");
+            if (_attackSpeedBonusPercent != 0)
+                sb.AppendLine(_attackSpeedBonusPercent > 0 ? $"+{_attackSpeedBonusPercent * 100:F0}% 攻速" : $"{_attackSpeedBonusPercent * 100:F0}% 攻速");
+            if (_critChanceBonus != 0)
+                sb.AppendLine(_critChanceBonus > 0 ? $"+{_critChanceBonus * 100:F0}% 暴击" : $"{_critChanceBonus * 100:F0}% 暴击");
+            if (_armorBonus != 0)
+                sb.AppendLine(_armorBonus > 0 ? $"+{_armorBonus} 护甲" : $"{_armorBonus} 护甲");
+            if (_rangeBonusPercent != 0)
+                sb.AppendLine(_rangeBonusPercent > 0 ? $"+{_rangeBonusPercent * 100:F0}% 范围" : $"{_rangeBonusPercent * 100:F0}% 范围");
+            if (_luckBonus != 0)
+                sb.AppendLine(_luckBonus > 0 ? $"+{_luckBonus} 幸运" : $"{_luckBonus} 幸运");
+            if (_harvestingBonus != 0)
+                sb.AppendLine(_harvestingBonus > 0 ? $"+{_harvestingBonus} 收获" : $"{_harvestingBonus} 收获");
 
-            if (!string.IsNullOrEmpty(specialAbility))
+            if (!string.IsNullOrEmpty(_specialAbility))
             {
                 sb.AppendLine();
-                sb.AppendLine(specialAbility);
+                sb.AppendLine(_specialAbility);
             }
 
             return sb.ToString();

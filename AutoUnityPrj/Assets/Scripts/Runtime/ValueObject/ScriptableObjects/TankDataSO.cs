@@ -6,7 +6,7 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
     /// <summary>
     /// 战车数据 ScriptableObject - 可在Inspector中配置
     /// 作者：AI
-    /// 最后修改时间：2026-04-03
+    /// 最后修改时间：2026-04-09
     /// </summary>
     [CreateAssetMenu(fileName = "NewTankData", menuName = "铁皮突突/战车数据")]
     public class TankDataSO : ScriptableObject
@@ -27,7 +27,7 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         [SerializeField] private float _attackSpeed = 5f;
         [SerializeField] private float _critRate = 5f;
         [SerializeField] private float _range = 5f;
-        [SerializeField] private float _aimAccuracy = 0.85f;  // 瞄准精度阈值
+        [SerializeField] private float _aimAccuracy = 0.85f;
 
         [Header("防御属性")]
         [SerializeField] private int _armor = 0;
@@ -39,6 +39,112 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         [Header("成长属性")]
         [SerializeField] private float _luck = 0f;
         [SerializeField] private float _harvest = 1f;
+
+        #region Properties
+
+        public int MaxHealth
+        {
+            get => _maxHealth;
+            set => _maxHealth = Mathf.Max(1, value);
+        }
+
+        public float HealthRegen
+        {
+            get => _healthRegen;
+            set => _healthRegen = Mathf.Max(0, value);
+        }
+
+        public float Lifesteal
+        {
+            get => _lifesteal;
+            set => _lifesteal = Mathf.Clamp01(value);
+        }
+
+        public float PercentDamage
+        {
+            get => _percentDamage;
+            set => _percentDamage = value;
+        }
+
+        public float RangedDamage
+        {
+            get => _rangedDamage;
+            set => _rangedDamage = value;
+        }
+
+        public float MeleeDamage
+        {
+            get => _meleeDamage;
+            set => _meleeDamage = value;
+        }
+
+        public float ElementDamage
+        {
+            get => _elementDamage;
+            set => _elementDamage = value;
+        }
+
+        public float Engineering
+        {
+            get => _engineering;
+            set => _engineering = value;
+        }
+
+        public float AttackSpeed
+        {
+            get => _attackSpeed;
+            set => _attackSpeed = Mathf.Max(0.1f, value);
+        }
+
+        public float CritRate
+        {
+            get => _critRate;
+            set => _critRate = Mathf.Clamp(value, 0, 100);
+        }
+
+        public float Range
+        {
+            get => _range;
+            set => _range = Mathf.Max(0, value);
+        }
+
+        public float AimAccuracy
+        {
+            get => _aimAccuracy;
+            set => _aimAccuracy = Mathf.Clamp01(value);
+        }
+
+        public int Armor
+        {
+            get => _armor;
+            set => _armor = Mathf.Max(0, value);
+        }
+
+        public float Dodge
+        {
+            get => _dodge;
+            set => _dodge = Mathf.Clamp01(value);
+        }
+
+        public float MoveSpeed
+        {
+            get => _moveSpeed;
+            set => _moveSpeed = Mathf.Max(0.1f, value);
+        }
+
+        public float Luck
+        {
+            get => _luck;
+            set => _luck = value;
+        }
+
+        public float Harvest
+        {
+            get => _harvest;
+            set => _harvest = Mathf.Max(0, value);
+        }
+
+        #endregion
 
         /// <summary>
         /// 转换为 TankDataValue

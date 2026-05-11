@@ -191,16 +191,11 @@ namespace Game.Runtime.Controller
                 // 设置玩家索引
                 tankController.gameObject.name = $"PlayerTank_{player.PlayerIndex}";
 
-                // 设置战车数据
+                // 设置战车数据 (使用public setter和method)
                 if (_defaultTankData != null)
                 {
-                    // 通过反射设置 SO
-                    var field = typeof(TankController).GetField("_tankDataSO",
-                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    field?.SetValue(tankController, _defaultTankData);
-                    tankController.GetType().GetMethod("InitializeData",
-                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                        ?.Invoke(tankController, null);
+                    tankController.TankDataSOSetter = _defaultTankData;
+                    tankController.ReinitializeData();
                 }
             }
 

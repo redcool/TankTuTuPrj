@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Game.Runtime.View;
 
 namespace Game.Runtime.View
 {
     /// <summary>
     /// 开始界面 - 开始游戏、继续游戏按钮
-    /// 点击StartButton后隐藏自己，显示CharacterSelectView
+    /// 通过事件系统与 PlayerSelectionControl 通信
     /// 作者：AI
-    /// 最后修改时间：2026-04-07
+    /// 最后修改时间：2026-04-10
     /// </summary>
     public class StartView : MonoBehaviour
     {
@@ -18,9 +19,6 @@ namespace Game.Runtime.View
         [Header("UI引用")]
         [SerializeField] private Button _startButton;
         [SerializeField] private Button _continueButton;
-
-        [Header("角色选择界面")]
-        [SerializeField] private CharacterSelectView _characterSelectView;
 
         // 回调
         public delegate void StartAction();
@@ -41,6 +39,11 @@ namespace Game.Runtime.View
             }
         }
 
+        private void OnDestroy()
+        {
+            // 取消事件订阅（如果需要监听返回事件）
+        }
+
         /// <summary>
         /// 按路径查找UI元素
         /// </summary>
@@ -57,12 +60,6 @@ namespace Game.Runtime.View
                 var btnTransform = transform.Find(_continueButtonPath);
                 if (btnTransform != null)
                     _continueButton = btnTransform.GetComponent<Button>();
-            }
-
-            // 自动查找角色选择界面
-            if (_characterSelectView == null)
-            {
-                _characterSelectView = FindObjectOfType<CharacterSelectView>();
             }
         }
 
@@ -84,15 +81,13 @@ namespace Game.Runtime.View
             }
         }
 
+        /// <summary>
+        /// 开始游戏按钮点击 - 发布事件
+        /// </summary>
         private void OnStartClicked()
         {
-            // 隐藏开始菜单
-            HideStartMenu();
-            // 显示角色选择界面
-            if (_characterSelectView != null)
-            {
-                _characterSelectView.Show();
-            }
+            // 发布事件，让 PlayerSelectionControl 订阅并处理
+            SelectionEventManager.Instance.Publish(SelectionEventType.StartGame);
             OnStartGame?.Invoke();
         }
 
@@ -100,18 +95,6 @@ namespace Game.Runtime.View
         {
             OnContinueGame?.Invoke();
             LoadLevel("Level_0");
-        }
-
-        /// <summary>
-        /// 隐藏开始菜单（隐藏自身Canvas或父级）
-        /// </summary>
-        private void HideStartMenu()
-        {
-            var canvas = GetComponentInParent<Canvas>();
-            if (canvas != null)
-                canvas.gameObject.SetActive(false);
-            else
-                gameObject.SetActive(false);
         }
 
         /// <summary>

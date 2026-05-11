@@ -6,7 +6,7 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
     /// <summary>
     /// 敌人数据 ScriptableObject - 可在Inspector中配置
     /// 作者：AI
-    /// 最后修改时间：2026-04-03
+    /// 最后修改时间：2026-04-09
     /// </summary>
     [CreateAssetMenu(fileName = "NewEnemyData", menuName = "铁皮突突/敌人数据")]
     public class EnemyDataSO : ScriptableObject
@@ -32,6 +32,94 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         [SerializeField] private float _dropChance = 1f;
         [SerializeField] private bool _dropTreasureBox = false;
         [SerializeField] private int _treasureBoxDropChance = 0;
+
+        #region Properties
+
+        public string EnemyId
+        {
+            get => _enemyId;
+            set => _enemyId = value;
+        }
+
+        public string EnemyName
+        {
+            get => _enemyName;
+            set => _enemyName = value;
+        }
+
+        public EnemyType EnemyType
+        {
+            get => _enemyType;
+            set => _enemyType = value;
+        }
+
+        public int MaxHealth
+        {
+            get => _maxHealth;
+            set => _maxHealth = Mathf.Max(1, value);
+        }
+
+        public float MoveSpeed
+        {
+            get => _moveSpeed;
+            set => _moveSpeed = Mathf.Max(0, value);
+        }
+
+        public float AttackDamage
+        {
+            get => _attackDamage;
+            set => _attackDamage = Mathf.Max(0, value);
+        }
+
+        public float AttackRange
+        {
+            get => _attackRange;
+            set => _attackRange = Mathf.Max(0, value);
+        }
+
+        public float AttackInterval
+        {
+            get => _attackInterval;
+            set => _attackInterval = Mathf.Max(0.1f, value);
+        }
+
+        public float CritRate
+        {
+            get => _critRate;
+            set => _critRate = Mathf.Clamp(value, 0, 100);
+        }
+
+        public int Armor
+        {
+            get => _armor;
+            set => _armor = Mathf.Max(0, value);
+        }
+
+        public int EnergyDrop
+        {
+            get => _energyDrop;
+            set => _energyDrop = Mathf.Max(0, value);
+        }
+
+        public float DropChance
+        {
+            get => _dropChance;
+            set => _dropChance = Mathf.Clamp01(value);
+        }
+
+        public bool DropTreasureBox
+        {
+            get => _dropTreasureBox;
+            set => _dropTreasureBox = value;
+        }
+
+        public int TreasureBoxDropChance
+        {
+            get => _treasureBoxDropChance;
+            set => _treasureBoxDropChance = Mathf.Clamp(value, 0, 100);
+        }
+
+        #endregion
 
         /// <summary>
         /// 转换为 EnemyDataValue

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7497ad52d2f594a834baf60b117faa, type: 3}
+  m_Name: "\u7A81\u51FB\u578B"
+  m_EditorClassIdentifier: 
+  _characterName: "\u7A81\u51FB\u578B"
+  _icon: {fileID: 1465112229, guid: a3260e5632546584e8dff5cac29d0386, type: 3}
+  _description: "\u8FD1\u6218Focused,\u9AD8\u653B\u901F\u548C\u95EA\u907F"
+  _maxHpBonus: 20
+  _speedBonusPercent: 0.1
+  _attackSpeedBonusPercent: 0.3
+  _critChanceBonus: 0.05
+  _armorBonus: 2
+  _rangeBonusPercent: -0.3
+  _luckBonus: 0
+  _harvestingBonus: 0
+  _startingWeaponPaths:
+  - "ScriptableObjects/Weapons/\u52A0\u519C\u70AE"
+  _isUnlockedByDefault: 1
+  _unlockCondition: 
+  _unlockRequirement: 0
+  _specialAbility: "\u8FD1\u6218\u4F24\u5BB3+30%,\u8303\u56F4-30%"

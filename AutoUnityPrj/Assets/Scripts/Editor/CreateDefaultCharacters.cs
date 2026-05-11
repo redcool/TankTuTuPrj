@@ -1,17 +1,17 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.IO;
 using Game.Runtime.ValueObject.ScriptableObjects;
 
-namespace Game.Editor
+namespace Game.Runtime.Editor
 {
     /// <summary>
     /// 编辑器工具 - 创建默认角色数据
-    /// 菜单: IronTutu → Create Default Characters
     /// </summary>
-    public class CreateDefaultCharacters : EditorWindow
+    public class CreateDefaultCharacters
     {
-        [MenuItem("IronTutu/Create Default Characters")]
+        [MenuItem("铁皮突突/创建数据/创建默认角色数据")]
         public static void CreateDefaults()
         {
             string folderPath = "Assets/Resources/ScriptableObjects/Characters";
@@ -20,126 +20,50 @@ namespace Game.Editor
                 Directory.CreateDirectory(folderPath);
             }
 
-            // 5个默认解锁角色（参考土豆兄弟的初始角色）
-            var characters = new CharacterDataSO[]
-            {
-                CreateWellRounded(),    // 均衡型 - 默认解锁
-                CreateBrawler(),        // 近战型 - 默认解锁
-                CreateRanger(),         // 远程型 - 默认解锁
-                CreateEngineer(),       // 工程型 - 默认解锁
-                CreateLucky(),          // 幸运型 - 默认解锁
-            };
-
-            foreach (var character in characters)
-            {
-                string assetPath = $"{folderPath}/{character.characterName}.asset";
-                AssetDatabase.CreateAsset(character, assetPath);
-                Debug.Log($"[创建角色] {character.characterName} → {assetPath}");
-            }
+            // 5个默认解锁角色
+            CreateCharacterAsset(folderPath, "均衡型", "均衡型战车,适合新手", 0, 0, 0, 0, 0, 0, 0, 0, new[] { "ScriptableObjects/Weapons/主炮" }, true, "无特殊能力,所有属性均衡");
+            CreateCharacterAsset(folderPath, "突击型", "近战Focused,高攻速和闪避", 20, 0.1f, 0.3f, 0.05f, 2, -0.3f, 0, 0, new[] { "ScriptableObjects/Weapons/加农炮" }, true, "近战伤害+30%,范围-30%");
+            CreateCharacterAsset(folderPath, "狙击型", "远程Focused,大范围和高精度", -10, 0, 0, 0.1f, 0, 0.5f, 0, 0, new[] { "ScriptableObjects/Weapons/主炮" }, true, "范围+50%,暴击+10%");
+            CreateCharacterAsset(folderPath, "工程型", "炮塔Focused,自动防御", 10, -0.05f, 0, 0, 5, 0, 0, 5, new[] { "ScriptableObjects/Weapons/榴弹炮" }, true, "工程伤害+25%,炮塔生成范围减少");
+            CreateCharacterAsset(folderPath, "幸运型", "高幸运,高掉落率", 0, 0, -0.2f, 0.15f, 0, 0, 50, 10, new[] { "ScriptableObjects/Weapons/主炮" }, true, "幸运+50,掉落率+20%,攻速-20%");
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("[铁皮突突] 5个默认角色数据创建完成！");
+            Debug.Log("[铁皮突突] 5个默认角色数据创建完成!");
         }
 
-        private static CharacterDataSO CreateWellRounded()
+        private static void CreateCharacterAsset(string folder, string name, string desc, 
+            int maxHpBonus, float speedBonus, float atkSpeedBonus, float critBonus, int armorBonus, 
+            float rangeBonus, int luckBonus, int harvestBonus, string[] weapons, bool unlocked, string ability)
         {
-            var so = ScriptableObject.CreateInstance<CharacterDataSO>();
-            so.characterName = "WellRounded";
-            so.description = "Balanced tank, suitable for beginners";
-            so.maxHpBonus = 0;
-            so.speedBonusPercent = 0;
-            so.attackSpeedBonusPercent = 0;
-            so.critChanceBonus = 0;
-            so.armorBonus = 0;
-            so.rangeBonusPercent = 0;
-            so.luckBonus = 0;
-            so.harvestingBonus = 0;
-            so.startingWeaponPaths = new[] { "Weapons/DefaultBlaster" };
-            so.isUnlockedByDefault = true;
-            so.unlockCondition = "";
-            so.specialAbility = "No special ability, all stats balanced";
-            return so;
-        }
+            string assetPath = $"{folder}/{name}.asset";
+            
+            if (File.Exists(assetPath))
+            {
+                Debug.Log($"[CreateDefaultCharacters] {name} 已存在,跳过");
+                return;
+            }
 
-        private static CharacterDataSO CreateBrawler()
-        {
             var so = ScriptableObject.CreateInstance<CharacterDataSO>();
-            so.characterName = "Brawler";
-            so.description = "Melee focused, high attack speed and dodge";
-            so.maxHpBonus = 20;
-            so.speedBonusPercent = 0.1f;
-            so.attackSpeedBonusPercent = 0.3f;
-            so.critChanceBonus = 0.05f;
-            so.armorBonus = 2;
-            so.rangeBonusPercent = -0.3f;
-            so.luckBonus = 0;
-            so.harvestingBonus = 0;
-            so.startingWeaponPaths = new[] { "Weapons/IronBall" };
-            so.isUnlockedByDefault = true;
-            so.unlockCondition = "";
-            so.specialAbility = "Melee damage +30%, range -30%";
-            return so;
-        }
-
-        private static CharacterDataSO CreateRanger()
-        {
-            var so = ScriptableObject.CreateInstance<CharacterDataSO>();
-            so.characterName = "Ranger";
-            so.description = "Ranged focused, large range and high precision";
-            so.maxHpBonus = -10;
-            so.speedBonusPercent = 0;
-            so.attackSpeedBonusPercent = 0;
-            so.critChanceBonus = 0.1f;
-            so.armorBonus = 0;
-            so.rangeBonusPercent = 0.5f;
-            so.luckBonus = 0;
-            so.harvestingBonus = 0;
-            so.startingWeaponPaths = new[] { "Weapons/Laser" };
-            so.isUnlockedByDefault = true;
-            so.unlockCondition = "";
-            so.specialAbility = "Range +50%, crit chance +10%, cannot equip melee weapons";
-            return so;
-        }
-
-        private static CharacterDataSO CreateEngineer()
-        {
-            var so = ScriptableObject.CreateInstance<CharacterDataSO>();
-            so.characterName = "Engineer";
-            so.description = "Turret focused, auto defense";
-            so.maxHpBonus = 10;
-            so.speedBonusPercent = -0.05f;
-            so.attackSpeedBonusPercent = 0;
-            so.critChanceBonus = 0;
-            so.armorBonus = 5;
-            so.rangeBonusPercent = 0;
-            so.luckBonus = 0;
-            so.harvestingBonus = 5;
-            so.startingWeaponPaths = new[] { "Weapons/Flame" };
-            so.isUnlockedByDefault = true;
-            so.unlockCondition = "";
-            so.specialAbility = "Engineering damage +25%, turret spawn range reduced";
-            return so;
-        }
-
-        private static CharacterDataSO CreateLucky()
-        {
-            var so = ScriptableObject.CreateInstance<CharacterDataSO>();
-            so.characterName = "Lucky";
-            so.description = "High luck, high drop rate";
-            so.maxHpBonus = 0;
-            so.speedBonusPercent = 0;
-            so.attackSpeedBonusPercent = -0.2f;
-            so.critChanceBonus = 0.15f;
-            so.armorBonus = 0;
-            so.rangeBonusPercent = 0;
-            so.luckBonus = 50;
-            so.harvestingBonus = 10;
-            so.startingWeaponPaths = new[] { "Weapons/DefaultBlaster" };
-            so.isUnlockedByDefault = true;
-            so.unlockCondition = "";
-            so.specialAbility = "Luck +50, drop rate +20%, attack speed -20%";
-            return so;
+            
+            // 使用 setter 直接设置属性
+            so.CharacterName = name;
+            so.Description = desc;
+            so.MaxHpBonus = maxHpBonus;
+            so.SpeedBonusPercent = speedBonus;
+            so.AttackSpeedBonusPercent = atkSpeedBonus;
+            so.CritChanceBonus = critBonus;
+            so.ArmorBonus = armorBonus;
+            so.RangeBonusPercent = rangeBonus;
+            so.LuckBonus = luckBonus;
+            so.HarvestingBonus = harvestBonus;
+            so.StartingWeaponPaths = weapons;
+            so.IsUnlockedByDefault = unlocked;
+            so.SpecialAbility = ability;
+            
+            AssetDatabase.CreateAsset(so, assetPath);
+            Debug.Log($"[CreateDefaultCharacters] 创建: {name}");
         }
     }
 }
+#endif
