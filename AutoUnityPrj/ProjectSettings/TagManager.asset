@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Resource
   - Enemy
+  - InputManager
   layers:
   - Default
   - TransparentFX
