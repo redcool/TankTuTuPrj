@@ -1,0 +1,49 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="project://database/Assets/UI/Common/Common.uss" />
+    <ui:Style src="project://database/Assets/UI/CharacterSelect/CharacterSelect.uss" />
+    
+    <ui:VisualElement class="panel-dark cs-root">
+        <!-- 顶部标题 -->
+        <ui:VisualElement class="cs-header">
+            <ui:Button text="← 返回" class="btn btn-secondary btn-small cs-back-btn" name="btn-back" />
+            <ui:Label text="选择战车" class="heading-xl cs-title" />
+            <ui:VisualElement class="cs-header-spacer" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="cs-main">
+            <!-- 左侧: 战车卡片网格 -->
+            <ui:ScrollView class="cs-card-grid-scroll">
+                <ui:VisualElement class="cs-card-grid" name="card-grid">
+                    <!-- 卡片由 Presenter 动态创建 -->
+                </ui:VisualElement>
+            </ui:ScrollView>
+
+            <!-- 右侧: 详情预览面板 -->
+            <ui:VisualElement class="cs-detail-panel" name="detail-panel">
+                <ui:VisualElement class="cs-detail-header">
+                    <ui:Label text="战车详情" class="heading-md" name="detail-title" />
+                    <ui:Label text="" class="tag" name="detail-vehicle-tag" />
+                </ui:VisualElement>
+                <ui:VisualElement class="divider" />
+                
+                <ui:VisualElement class="cs-detail-stats" name="detail-stats">
+                    <ui:Label text="选择一辆战车查看详情" class="text-secondary" name="detail-placeholder" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="cs-detail-ability" name="detail-ability">
+                    <ui:Label text="" class="heading-md" name="detail-ability-title" />
+                    <ui:Label text="" class="text-body" name="detail-ability-desc" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="cs-detail-weapon" name="detail-weapon">
+                    <ui:Label text="" class="text-secondary" name="detail-weapon-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- 底部 -->
+        <ui:VisualElement class="cs-footer">
+            <ui:Button text="确 定" class="btn btn-primary" name="btn-confirm" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

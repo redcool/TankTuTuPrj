@@ -1,0 +1,388 @@
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
+using Game.Runtime.ValueObject;
+using Game.Runtime.ValueObject.ScriptableObjects;
+
+/// <summary>
+/// 鎴樿溅鎺у埗鍣?- 璐熻矗鎴樿溅绉诲姩銆佽浆鍚戝拰灞炴€х鐞?/// 浣滆€咃細AI
+/// 鏈€鍚庝慨鏀规椂闂达細2026-04-03
+/// </summary>
+namespace Game.Runtime.Controller
+{
+    public class TankController : MonoBehaviour
+    {
+        // 甯搁噺
+        private const string TAG_ENEMY = "Enemy";
+        private const string TAG_RESOURCE = "Resource";
+
+        // 搴忓垪鍖栧瓧娈?        [Header("杈撳叆璁剧疆")]
+        [SerializeField] private int _playerIndex = 0;
+
+        [Header("鍧﹀厠棰勫埗浣?)]
+        [SerializeField] private GameObject _tankPrefab = null!;
+
+        [Header("鎴樿溅鏁版嵁 (ScriptableObject)")]
+        [SerializeField] private TankDataSO _tankDataSO;
+        
+        /// <summary>
+        /// 璁剧疆鎴樿溅鏁版嵁SO (渚涘閮ㄤ唬鐮佷娇鐢?閬垮厤鍙嶅皠)
+        /// </summary>
+        public TankDataSO TankDataSOSetter
+        {
+            get => _tankDataSO;
+            set => _tankDataSO = value;
+        }
+
+        [Header("缁勪欢缂撳瓨")]
+        [SerializeField] private Transform _weaponSlotsRoot;
+        [SerializeField] private Transform _modelContainer;
+
+        // 绉佹湁瀛楁
+        private GameObject _tankInstance;
+        private Rigidbody _rigidbody;
+        private TankDataValue _tankData;
+        private Transform[] _weaponSlots;
+        private Vector2 _moveInput;
+        private PlayerInput _playerInput;
+        private InputAction _moveAction;
+
+        // 鎽勫儚鏈虹紦瀛?        private Camera _mainCamera;
+
+        // 鍏湁灞炴€?        public TankDataValue TankData => _tankData;
+        public int PlayerIndex => _playerIndex;
+        public bool IsAlive => _tankData.CurrentHealth > 0;
+
+        // 鐢熷懡鍛ㄦ湡
+        private void Awake()
+        {
+            // 鍏堝垵濮嬪寲鏁版嵁锛屽啀缂撳瓨缁勪欢锛堢‘淇濇暟鎹彲鐢級
+            InitializeData();
+            CacheComponents();
+            // 娴佺▼鏇存柊锛氬厛瀹炰緥鍖栧潶鍏嬶紝鍐嶆煡鎵緎lots锛屽啀鍒濆鍖栧叾浠?            InstantiateTank();
+            SetupWeaponSlots();
+            SetupInput();
+        }
+
+        private void OnEnable()
+        {
+            if (_moveAction != null) _moveAction.Enable();
+        }
+
+        private void OnDisable()
+        {
+            if (_moveAction != null) _moveAction.Disable();
+        }
+
+        private void Start()
+        {
+            _tankData.CurrentHealth = _tankData.MaxHealth;
+        }
+
+        private void Update()
+        {
+            if (!IsAlive) return;
+            ProcessInput();
+            UpdateVisuals();
+        }
+
+        private void FixedUpdate()
+        {
+            if (!IsAlive) return;
+            MoveTank();
+            RegenerateHealth();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag(TAG_RESOURCE))
+            {
+                CollectResource(other);
+            }
+        }
+
+        // 绉佹湁鏂规硶
+        private void CacheComponents()
+        {
+            // 鐗╃悊缁勪欢浠?PlayerTank (褰撳墠 gameObject) 鑾峰彇
+            _rigidbody = GetComponent<Rigidbody>();
+            if (_rigidbody == null)
+            {
+                _rigidbody = gameObject.AddComponent<Rigidbody>();
+                _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                _rigidbody.useGravity = false;
+            }
+
+            // 缂撳瓨涓绘憚鍍忔満
+            _mainCamera = Camera.main;
+        }
+
+        private void InstantiateTank()
+        {
+            // 纭繚 Model_Container 瀛樺湪
+            if (_modelContainer == null)
+            {
+                _modelContainer = transform.Find("Model_Container");
+            }
+            
+            if (_modelContainer == null)
+            {
+                Debug.LogWarning("[TankController] 鏈壘鍒?Model_Container 瀛愮墿浣?);
+                return;
+            }
+
+            // 瀹炰緥鍖栧潶鍏嬫ā鍨嬪埌 Model_Container 涓?            if (_tankPrefab != null)
+            {
+                _tankInstance = Instantiate(_tankPrefab, _modelContainer.position, Quaternion.identity, _modelContainer);
+                
+                // 淇濇寔鍘熷鏃嬭浆
+                _tankInstance.transform.localRotation = Quaternion.identity;
+                
+                Debug.Log($"[TankController] 宸茬敓鎴愬潶鍏嬫ā鍨嬪埌 Model_Container: {_tankInstance.name}");
+
+                // 浠庡疄渚嬪寲鐨勫潶鍏嬩腑鏌ユ壘姝﹀櫒妲戒綅
+                FindWeaponSlotsFromInstance();
+            }
+            else
+            {
+                Debug.LogWarning("[TankController] _tankPrefab 涓?null锛岃鎷栧叆鍧﹀厠妯″瀷 prefab");
+            }
+        }
+
+        /// <summary>
+        /// 浠庡疄渚嬪寲鐨勫潶鍏嬩腑鏌ユ壘姝﹀櫒妲戒綅 (Slot0, Slot1, ...)
+        /// </summary>
+        private void FindWeaponSlotsFromInstance()
+        {
+            if (_tankInstance == null) return;
+
+            // 灏濊瘯鍦ㄥ疄渚嬪寲鍧﹀厠涓嬫煡鎵惧悕涓?"WeaponSlots" 鎴?"Slots" 鐨勭埗鑺傜偣
+            Transform slotsRoot = _tankInstance.transform.Find("WeaponSlots");
+            if (slotsRoot == null)
+            {
+                slotsRoot = _tankInstance.transform.Find("Slots");
+            }
+
+            // 濡傛灉娌℃壘鍒扮埗鑺傜偣锛屽皾璇曟煡鎵剧洿鎺ュ瓙绾т腑鍖呭惈 "Slot" 鐨?            if (slotsRoot == null)
+            {
+                for (int i = 0; i < _tankInstance.transform.childCount; i++)
+                {
+                    Transform child = _tankInstance.transform.GetChild(i);
+                    if (child.name.Contains("Slot"))
+                    {
+                        // 鎵惧埌绗竴涓猄lot锛屽亣璁惧悓绾х殑閮芥槸Slot
+                        Transform parent = child.parent;
+                        if (parent != null && parent.childCount >= 6)
+                        {
+                            slotsRoot = parent;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (slotsRoot != null)
+            {
+                _weaponSlotsRoot = slotsRoot;
+                Debug.Log($"[TankController] 鎵惧埌姝﹀櫒妲戒綅鏍硅妭鐐? {slotsRoot.name}");
+            }
+            else
+            {
+                Debug.LogWarning("[TankController] 鏈壘鍒版鍣ㄦЫ浣嶏紝璇锋鏌ラ鍒朵綋閰嶇疆");
+            }
+        }
+
+        private void InitializeData()
+        {
+            if (_tankData == null)
+            {
+                // 浼樺厛浣跨敤SO锛屽鏋滄病鏈夊垯鍒涘缓榛樿鐨?                if (_tankDataSO != null)
+                {
+                    _tankData = _tankDataSO.ToDataValue();
+                    Debug.Log($"[TankController] 浠嶴O鍔犺浇鎴樿溅鏁版嵁: {_tankDataSO.name}");
+                }
+                else
+                {
+                    _tankData = new TankDataValue();
+                    Debug.LogWarning("[TankController] 鏈厤缃甌ankDataSO锛屼娇鐢ㄩ粯璁ゆ暟鎹?);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 閲嶆柊鍒濆鍖栨暟鎹?(渚涘閮ㄤ唬鐮佽皟鐢?
+        /// </summary>
+        public void ReinitializeData()
+        {
+            _tankData = null;
+            InitializeData();
+        }
+
+        private void SetupWeaponSlots()
+        {
+            if (_weaponSlotsRoot != null)
+            {
+                _weaponSlots = new Transform[_weaponSlotsRoot.childCount];
+                for (int i = 0; i < _weaponSlotsRoot.childCount; i++)
+                {
+                    _weaponSlots[i] = _weaponSlotsRoot.GetChild(i);
+                }
+            }
+        }
+
+        private void SetupInput()
+        {
+            _playerInput = GetComponent<PlayerInput>();
+            if (_playerInput != null && _playerInput.actions != null)
+            {
+                _moveAction = _playerInput.actions["Move"];
+            }
+            
+            // Fallback: Create simple input if PlayerInput not configured
+            if (_moveAction == null)
+            {
+                Debug.Log("TankController: Using fallback keyboard input");
+                CreateFallbackInput();
+            }
+        }
+
+        private void CreateFallbackInput()
+        {
+            _moveAction = new InputAction("Move", InputActionType.Value, "<Keyboard>/w");
+            _moveAction.AddCompositeBinding("2DVector")
+                .With("Up", "<Keyboard>/w")
+                .With("Down", "<Keyboard>/s")
+                .With("Left", "<Keyboard>/a")
+                .With("Right", "<Keyboard>/d");
+            _moveAction.Enable();
+        }
+
+        private void ProcessInput()
+        {
+            if (_moveAction != null)
+            {
+                _moveInput = _moveAction.ReadValue<Vector2>();
+            }
+        }
+
+        private void MoveTank()
+        {
+            if (_moveInput.sqrMagnitude < 0.01f) return;
+
+            // 鑾峰彇鎽勫儚鏈虹殑鍓嶅悗宸﹀彸鏂瑰悜锛堝拷鐣杞达級
+            Vector3 cameraForward = _mainCamera != null ? _mainCamera.transform.forward : Vector3.forward;
+            Vector3 cameraRight = _mainCamera != null ? _mainCamera.transform.right : Vector3.right;
+            
+            cameraForward.y = 0;
+            cameraRight.y = 0;
+            cameraForward.Normalize();
+            cameraRight.Normalize();
+
+            // W = 鎽勫儚鏈哄墠鏂瑰悜, S = 鍙嶆柟鍚? D = 鍙虫柟鍚? A = 鍙嶆柟鍚?            Vector3 moveDirection = (cameraForward * _moveInput.y + cameraRight * _moveInput.x).normalized;
+            Debug.DrawRay(transform.position, moveDirection * 10, Color.green);
+            Vector3 targetPosition = transform.position + moveDirection * _tankData.MoveSpeed * Time.fixedDeltaTime;
+            _rigidbody.MovePosition(targetPosition);
+
+            if (moveDirection.sqrMagnitude > 0.01f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.fixedDeltaTime);
+            }
+        }
+
+        private void RegenerateHealth()
+        {
+            if (_tankData.CurrentHealth < _tankData.MaxHealth && _tankData.HealthRegen > 0)
+            {
+                _tankData.CurrentHealth += Mathf.RoundToInt(_tankData.HealthRegen * Time.fixedDeltaTime);
+            }
+        }
+
+        private void UpdateVisuals()
+        {
+        }
+
+        private void CollectResource(Collider resource)
+        {
+            int amount = 1;
+            amount = Mathf.RoundToInt(amount * _tankData.Harvest);
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddResource(_playerIndex, amount);
+            }
+            Destroy(resource.gameObject);
+        }
+
+        public void TakeDamage(int damage)
+        {
+            if (!IsAlive) return;
+
+            int actualDamage = damage;
+            if (_tankData.Armor > 0)
+            {
+                actualDamage = Mathf.Max(1, damage - _tankData.Armor);
+            }
+
+            if (Random.value < _tankData.Dodge / 100f)
+            {
+                return;
+            }
+
+            _tankData.CurrentHealth -= actualDamage;
+
+            if (_tankData.CurrentHealth <= 0)
+            {
+                OnDeath();
+            }
+        }
+
+        public void Heal(int amount)
+        {
+            _tankData.CurrentHealth += amount;
+        }
+
+        public void AddStat(string statName, float value)
+        {
+            switch (statName.ToLower())
+            {
+                case "maxhealth": _tankData.MaxHealth += (int)value; break;
+                case "healthregen": _tankData.HealthRegen += value; break;
+                case "damage": _tankData.PercentDamage += value; break;
+                case "attackspeed": _tankData.AttackSpeed += value; break;
+                case "movespeed": _tankData.MoveSpeed += value; break;
+                case "critrate": _tankData.CritRate += value; break;
+                case "armor": _tankData.Armor += (int)value; break;
+                case "luck": _tankData.Luck += value; break;
+                case "harvest": _tankData.Harvest += value; break;
+            }
+        }
+
+        private void OnDeath()
+        {
+            _tankData.CurrentHealth = 0;
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnTankDeath(_playerIndex);
+            }
+        }
+
+        public Transform GetWeaponSlot(int index)
+        {
+            if (_weaponSlots != null && index >= 0 && index < _weaponSlots.Length)
+            {
+                return _weaponSlots[index];
+            }
+            return null;
+        }
+
+        public int GetAvailableSlotCount()
+        {
+            if (_weaponSlots == null) return 0;
+            int count = 0;
+            foreach (Transform slot in _weaponSlots)
+            {
+                if (slot.childCount == 0) count++;
+            }
+            return count;
+        }
+    }
+}

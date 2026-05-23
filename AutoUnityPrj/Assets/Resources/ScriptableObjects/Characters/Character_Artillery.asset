@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7497ad52d2f594a834baf60b117faa, type: 3}
+  m_Name: Character_Artillery
+  m_EditorClassIdentifier:
+  _characterId: spg
+  _characterName: 自行火炮
+  _vehicleType: 3
+  _icon: {fileID: 0}
+  _description: 远程炮击战车，超大攻击范围。范围轰炸的王者�?
+  _maxHealth: 55
+  _healthRegen: 0.1
+  _lifesteal: 0
+  _percentDamage: 0
+  _rangedDamage: 0
+  _meleeDamage: 0
+  _elementDamage: 0
+  _engineering: 0
+  _attackSpeed: 0.4
+  _critRate: 10
+  _range: 25
+  _aimAccuracy: 0.7
+  _armor: 0
+  _dodge: 0
+  _moveSpeed: 1.5
+  _luck: 0
+  _harvest: 1
+  _maxHpMod: 0
+  _speedModPercent: 0
+  _attackSpeedModPercent: 0
+  _critChanceMod: 0
+  _armorMod: 0
+  _rangeModPercent: 0
+  _dodgeMod: 0
+  _luckMod: 0
+  _harvestMod: 0
+  _startingWeaponPaths:
+  - ScriptableObjects/Weapons/Weapon_Missile_ATGM
+  _isUnlocked: 0
+  _unlockCondition: 累计击杀500敌人
+  _unlockRequirement: 500
+  _specialAbility: 范围轰炸：炮弹爆炸范�?50%，移�?30%
+  _specialAbilityType: blast_radius 

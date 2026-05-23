@@ -1,0 +1,103 @@
+/* CharacterCard.uss — 战车卡片样式 */
+
+.cc-card {
+    width: 290px;
+    background-color: var(--color-bg-card);
+    border-color: var(--color-border);
+    border-width: 1px;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+    position: relative;
+}
+
+.cc-card:hover {
+    background-color: var(--color-bg-card-hover);
+    border-color: var(--color-primary);
+}
+
+.cc-card.selected {
+    border-color: var(--color-primary);
+    border-width: 2px;
+    background-color: rgba(74, 124, 63, 0.15);
+}
+
+.cc-card.locked {
+    opacity: 0.6;
+}
+
+.cc-vehicle-tag {
+    align-self: flex-start;
+    margin-bottom: 8px;
+}
+
+.cc-icon {
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    background-color: var(--color-bg-dark);
+    border-color: var(--color-border);
+    border-width: 2px;
+    margin-bottom: 8px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.cc-icon-image {
+    width: 200px;
+    height: 200px;
+}
+
+.cc-icon-text {
+    font-size: 32px;
+    font-weight: bold;
+    -unity-text-align: middle-center;
+}
+
+/* 车辆类型颜色 */
+.cc-icon-tank    { background-color: #2d5c24; border-color: #4a7c3f; }
+.cc-icon-light   { background-color: #1a3a5c; border-color: #4488cc; }
+.cc-icon-apc     { background-color: #5c4a1a; border-color: #d4a844; }
+.cc-icon-spg     { background-color: #5c1a1a; border-color: #b54a4a; }
+.cc-icon-special { background-color: #3a2d5c; border-color: #8844cc; }
+
+.cc-name {
+    margin-bottom: 8px;
+    font-size: var(--text-lg);
+    text-align: center;
+}
+
+.cc-stats {
+    flex-direction: row;
+    gap: 12px;
+}
+
+/* 锁定图标 - 右上角 */
+.cc-lock-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    background-image: url("project://database/Assets/Arts/UI/ItemIcons/LockIcon.png");
+    background-size: contain;
+    background-position: center center;
+}
+
+/* 解锁条件文字 - 图标下方 */
+.cc-lock-text-below {
+    font-size: var(--text-sm);
+    color: #ffcc44;
+    text-align: center;
+    margin-top: 4px;
+    white-space: normal;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.cc-lock-text-below.visible {
+    opacity: 1;
+}

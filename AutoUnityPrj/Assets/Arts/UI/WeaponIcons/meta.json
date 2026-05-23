@@ -1,0 +1,210 @@
+{
+  "schema": "1.0",
+  "description": "武器图标元数据 - 铁皮突突 (TankTuTu)",
+  "generated_at": "2026-05-22",
+  "updated_at": "2026-05-22 (recovery from backup)",
+  "generation_pipeline": "ComfyUI Z-Image-Turbo",
+  "format": "PNG 1024×1024",
+  "background": "white",
+  "total": 18,
+  "files": [
+    {
+      "filename": "StandardCannon.png",
+      "source": "Weapon_MainCannon_00001_.png",
+      "category": "MainCannon",
+      "type": "Cannon",
+      "display_name": "标准火炮",
+      "rarity": "COMMON",
+      "description": "均衡型主炮",
+      "seed": 0,
+      "prompt": "A standard military cannon barrel, top-down view, white background, steel metal, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "LightCannon.png",
+      "source": "Weapon_LightCannon_new_00001_.png",
+      "category": "MainCannon",
+      "type": "MainCannon",
+      "display_name": "轻型火炮",
+      "rarity": "COMMON",
+      "description": "轻型基础主炮",
+      "seed": 11001,
+      "prompt": "一门独立的轻型加农炮，俯视角，白色背景，游戏图标，细长的炮管，炮口制退器，军绿色金属涂装，铆钉细节，炮管散热纹路，单独的火炮部件，不是坦克，没有车体，写实风格，高保真材质，PBR渲染，游戏资产"
+    },
+    {
+      "filename": "HeavyCannon.png",
+      "source": "Weapon_Cannon2_00001_.png",
+      "category": "MainCannon",
+      "type": "MainCannon",
+      "display_name": "重型火炮",
+      "rarity": "RARE",
+      "description": "重型高伤主炮",
+      "seed": 0,
+      "prompt": "A large heavy cannon, top-down view, white background, thick steel barrel, reinforced breech, heavy duty, game icon, realistic PBR render"
+    },
+    {
+      "filename": "QuickFireCannon.png",
+      "source": "Weapon_QuickFireCannon_00001_.png",
+      "category": "MainCannon",
+      "type": "Cannon",
+      "display_name": "速射炮",
+      "rarity": "RARE",
+      "description": "高速射击低后座主炮",
+      "seed": 2001,
+      "prompt": "A rapid-fire cannon, top-down view, white background, lightweight cannon with recoil mechanism, multiple cooling vents along barrel, fast-firing design, steel construction, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "BunkerBuster.png",
+      "source": "Weapon_BunkerBuster_00001_.png",
+      "category": "MainCannon",
+      "type": "Howitzer",
+      "display_name": "攻城炮",
+      "rarity": "EPIC",
+      "description": "超高伤害攻城重炮",
+      "seed": 2002,
+      "prompt": "A massive bunker buster siege cannon, top-down view, white background, extremely long and thick barrel, heavy breach mechanism, reinforced structure, demolition weapon, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "Gatling.png",
+      "source": "Weapon_GatlingGun_00001_.png",
+      "category": "MachineGun",
+      "type": "Gatling",
+      "display_name": "加特林",
+      "rarity": "RARE",
+      "description": "极高射速机关炮",
+      "seed": 0,
+      "prompt": "A Gatling gun with rotating barrels, top-down view, white background, multiple barrels, black steel, realistic PBR render, game icon"
+    },
+    {
+      "filename": "LightMG.png",
+      "source": "Weapon_LightMG_00001_.png",
+      "category": "MachineGun",
+      "type": "LightMG",
+      "display_name": "轻机枪",
+      "rarity": "COMMON",
+      "description": "持续压制火力轻机枪",
+      "seed": 2003,
+      "prompt": "A light machine gun, top-down view, white background, slim barrel with heat shield, box magazine, bipod, compact automatic weapon, black steel, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "HeavyMG.png",
+      "source": "Weapon_HeavyMG_00001_.png",
+      "category": "MachineGun",
+      "type": "HeavyMG",
+      "display_name": "重机枪",
+      "rarity": "COMMON",
+      "description": "高穿深对轻甲重机枪",
+      "seed": 2004,
+      "prompt": "A heavy machine gun, top-down view, white background, thick barrel with perforated cooling jacket, large ammunition feed belt, heavy duty mounts, dark steel, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "EMG.png",
+      "source": "Weapon_LaserCannon_00001_.png",
+      "category": "MachineGun",
+      "type": "Gatling",
+      "display_name": "电磁机枪",
+      "rarity": "EPIC",
+      "description": "能量武器无视护甲（由LaserCannon暂代）",
+      "seed": 0,
+      "prompt": "An electromagnetic machine gun, top-down view, white background, sci-fi energy weapon, coil barrel, blue energy accents, realistic PBR render, game icon"
+    },
+    {
+      "filename": "ATGM.png",
+      "source": "Weapon_Missile_00001_.png",
+      "category": "Missile",
+      "type": "Missile",
+      "display_name": "反坦克导弹",
+      "rarity": "RARE",
+      "description": "追踪制导反坦克导弹",
+      "seed": 0,
+      "prompt": "An anti-tank guided missile, top-down view, white background, missile tube with fins, green metallic, realistic PBR render, game icon"
+    },
+    {
+      "filename": "Rocket.png",
+      "source": "Weapon_RocketLauncher_00001_.png",
+      "category": "Missile",
+      "type": "Rocket",
+      "display_name": "火箭炮",
+      "rarity": "COMMON",
+      "description": "范围散射火箭发射器",
+      "seed": 0,
+      "prompt": "A rocket launcher, top-down view, white background, multiple rocket tubes, military green, realistic PBR render, game icon"
+    },
+    {
+      "filename": "GuidedMissile.png",
+      "source": "Weapon_GuidedMissile_00001_.png",
+      "category": "Missile",
+      "type": "Cruise",
+      "display_name": "制导导弹",
+      "rarity": "EPIC",
+      "description": "超级追踪瞄准最强敌人",
+      "seed": 2005,
+      "prompt": "A guided cruise missile, top-down view, white background, sleek aerodynamic body, wings and tail fins, seeker head, advanced white metallic casing, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "FlameSprayer.png",
+      "source": "Weapon_Flamethrower_00001_.png",
+      "category": "Sprayer",
+      "type": "Flame",
+      "display_name": "火焰喷射器",
+      "rarity": "COMMON",
+      "description": "持续灼烧范围伤害",
+      "seed": 0,
+      "prompt": "A flamethrower weapon, top-down view, white background, fuel tank, nozzle, red and black metal, realistic PBR render, game icon"
+    },
+    {
+      "filename": "CryoSprayer.png",
+      "source": "Weapon_CryoSprayer_00001_.png",
+      "category": "Sprayer",
+      "type": "Cryo",
+      "display_name": "冷冻喷射器",
+      "rarity": "RARE",
+      "description": "减速冻结控制型喷射器",
+      "seed": 2006,
+      "prompt": "A cryogenic freeze sprayer, top-down view, white background, industrial pressure tank with pressure gauge, cryo nozzle, blue metallic with frost details, pipes and valves, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "WaterCannon.png",
+      "source": "Weapon_WaterCannon_00001_.png",
+      "category": "Sprayer",
+      "type": "WaterCannon",
+      "display_name": "高压水炮",
+      "rarity": "COMMON",
+      "description": "超高击退推开敌人",
+      "seed": 2007,
+      "prompt": "A high-pressure water cannon, top-down view, white background, large water tank, powerful nozzle, industrial grade, blue and steel construction, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "AcidSprayer.png",
+      "source": "Weapon_AcidSprayer_00001_.png",
+      "category": "Sprayer",
+      "type": "Acid",
+      "display_name": "酸液喷射器",
+      "rarity": "RARE",
+      "description": "减甲腐蚀持续伤害",
+      "seed": 2008,
+      "prompt": "An acid sprayer weapon, top-down view, white background, chemical tank with hazard warning symbols, corrosion-resistant nozzle, green toxic accents, industrial equipment, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "Chainsaw.png",
+      "source": "Weapon_MeleeSaw_00001_.png",
+      "category": "Melee",
+      "type": "Blade",
+      "display_name": "链锯",
+      "rarity": "RARE",
+      "description": "近战持续切割武器",
+      "seed": 0,
+      "prompt": "A chainsaw melee weapon, top-down view, white background, sharp chain teeth, motor housing, silver and orange, realistic PBR render, game icon"
+    },
+    {
+      "filename": "Drill.png",
+      "source": "Weapon_Drill_00001_.png",
+      "category": "Melee",
+      "type": "Drill",
+      "display_name": "钻头",
+      "rarity": "COMMON",
+      "description": "破甲特化贴脸近战钻头",
+      "seed": 2009,
+      "prompt": "A heavy-duty drill melee weapon, top-down view, white background, large spiral drill bit, motor housing, industrial steel construction, gray and orange, realistic PBR render, game icon, studio lighting"
+    }
+  ]
+}

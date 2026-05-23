@@ -33,6 +33,8 @@ namespace Game.Runtime.ValueObject
         [SerializeField] private int _totalWins = 0;
         [SerializeField] private int _totalLosses = 0;
 
+        [SerializeField] private bool _hasInProgressBattle = false;
+
         // 时间戳
         [SerializeField] private long _lastSaveTime = 0;
 
@@ -95,6 +97,15 @@ namespace Game.Runtime.ValueObject
         {
             get => _lastSaveTime;
             set => _lastSaveTime = value;
+        }
+
+        /// <summary>
+        /// 是否有未完成的战局
+        /// </summary>
+        public bool HasInProgressBattle
+        {
+            get => _hasInProgressBattle;
+            set => _hasInProgressBattle = value;
         }
 
         #endregion

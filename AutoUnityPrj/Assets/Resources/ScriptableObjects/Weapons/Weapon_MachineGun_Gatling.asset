@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d61015218b4064cb87e0838590ad03, type: 3}
+  m_Name: Weapon_MachineGun_Gatling
+  m_EditorClassIdentifier: 
+  _weaponId: wpn_gatling
+  _weaponName: 加特林
+  _icon: {fileID: 0}
+  _description: 极高射速机关炮，射速之王
+  _weaponCategory: 1
+  _weaponType: 3
+  _damageType: 0
+  _rarity: 1
+  _damage: 6
+  _attackSpeed: 8.0
+  _range: 7
+  _level: 1
+  _maxLevel: 5
+  _pierce: 0
+  _area: 0
+  _duration: 0
+  _projectileSpeed: 28
+  _projectileCount: 1
+  _knockback: 0.1
+  _price: 280
+  _upgradeCost: 200
+  _upgradeDamagePerLevel: 0.15
+  _isDefault: 0

@@ -1,0 +1,32 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="project://database/Assets/UI/Common/Common.uss" />
+    <ui:Style src="project://database/Assets/UI/DifficultySelect/DifficultySelect.uss" />
+    
+    <ui:VisualElement class="panel-dark ds-root">
+        <!-- 标题 -->
+        <ui:VisualElement class="ds-header">
+            <ui:Button text="← 返回" class="btn btn-secondary btn-small" name="btn-back" />
+            <ui:Label text="选择难度" class="heading-xl ds-title" />
+        </ui:VisualElement>
+
+        <!-- 难度卡片横向滚动 -->
+        <ui:ScrollView class="ds-card-scroll" mode="Horizontal">
+            <ui:VisualElement class="ds-card-row" name="card-row">
+                <!-- 由 Presenter 动态创建 -->
+            </ui:VisualElement>
+        </ui:ScrollView>
+
+        <!-- 难度详情 -->
+        <ui:VisualElement class="ds-detail-area" name="detail-area">
+            <ui:Label text="选择一个难度" class="heading-md" name="detail-name" />
+            <ui:Label text="" class="text-secondary" name="detail-desc" />
+            <ui:VisualElement class="divider" />
+            <ui:VisualElement class="ds-detail-mods" name="detail-mods" />
+        </ui:VisualElement>
+
+        <!-- 开始战斗按钮 -->
+        <ui:VisualElement class="ds-footer">
+            <ui:Button text="开 始 战 斗 ▸" class="btn btn-primary ds-start-btn" name="btn-start" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

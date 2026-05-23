@@ -1,0 +1,88 @@
+/* CharacterSelect.uss — 角色选择界面样式 */
+
+.cs-root {
+    flex-grow: 1;
+    padding: 16px;
+}
+
+.cs-header {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.cs-back-btn {
+    margin-right: 16px;
+}
+
+.cs-title {
+    flex-grow: 1;
+}
+
+.cs-header-spacer {
+    width: 120px;
+}
+
+.cs-main {
+    flex-direction: row;
+    flex-grow: 1;
+    gap: 16px;
+    overflow: auto;
+}
+
+/* 卡片网格 */
+.cs-card-grid-scroll {
+    flex-grow: 1;
+    min-width: 600px;
+}
+
+.cs-card-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* 详情面板 */
+.cs-detail-panel {
+    width: 320px;
+    min-width: 280px;
+    background-color: var(--color-bg-panel);
+    border-color: var(--color-border);
+    border-width: 1px;
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    flex-shrink: 0;
+}
+
+.cs-detail-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.cs-detail-stats {
+    margin: 8px 0;
+}
+
+.cs-detail-ability {
+    margin: 8px 0;
+    padding: 8px;
+    background-color: var(--color-bg-card);
+    border-radius: var(--radius-sm);
+}
+
+.cs-detail-weapon {
+    margin: 8px 0;
+}
+
+/* 底部 */
+.cs-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top-width: 1px;
+    border-top-color: var(--color-border);
+    flex-shrink: 0;
+}

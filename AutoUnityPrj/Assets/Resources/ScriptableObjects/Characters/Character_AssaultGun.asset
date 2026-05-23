@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7497ad52d2f594a834baf60b117faa, type: 3}
+  m_Name: Character_AssaultGun
+  m_EditorClassIdentifier:
+  _characterId: td
+  _characterName: 歼击战车
+  _vehicleType: 0
+  _icon: {fileID: 0}
+  _description: 远程狙击战车，高暴击、高穿透。一击致命的远程杀手�?
+  _maxHealth: 80
+  _healthRegen: 0.2
+  _lifesteal: 0
+  _percentDamage: 0
+  _rangedDamage: 0
+  _meleeDamage: 0
+  _elementDamage: 0
+  _engineering: 0
+  _attackSpeed: 0.6
+  _critRate: 25
+  _range: 18
+  _aimAccuracy: 0.95
+  _armor: 0
+  _dodge: 5
+  _moveSpeed: 3.2
+  _luck: 0
+  _harvest: 1
+  _maxHpMod: 0
+  _speedModPercent: 0
+  _attackSpeedModPercent: 0
+  _critChanceMod: 0
+  _armorMod: 0
+  _rangeModPercent: 0
+  _dodgeMod: 0
+  _luckMod: 0
+  _harvestMod: 0
+  _startingWeaponPaths:
+  - ScriptableObjects/Weapons/Weapon_MainCannon_BunkerBuster
+  _isUnlocked: 0
+  _unlockCondition: 通关普通难�?
+  _unlockRequirement: 0
+  _specialAbility: 穿甲弹头：暴击伤�?30%，无视目�?0%护甲
+  _specialAbilityType: armor_pierce 

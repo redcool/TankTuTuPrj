@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7497ad52d2f594a834baf60b117faa, type: 3}
+  m_Name: Character_LightTank
+  m_EditorClassIdentifier:
+  _characterId: scout
+  _characterName: 轻型侦察�?
+  _vehicleType: 1
+  _icon: {fileID: 0}
+  _description: 高速侦察车辆，机动性极强。高闪避、高移速，游击战专家�?
+  _maxHealth: 70
+  _healthRegen: 0.3
+  _lifesteal: 0.02
+  _percentDamage: 0
+  _rangedDamage: 0
+  _meleeDamage: 0
+  _elementDamage: 0
+  _engineering: 0
+  _attackSpeed: 1.6
+  _critRate: 10
+  _range: 9
+  _aimAccuracy: 0.85
+  _armor: 0
+  _dodge: 15
+  _moveSpeed: 4.5
+  _luck: 5
+  _harvest: 1.2
+  _maxHpMod: 0
+  _speedModPercent: 0
+  _attackSpeedModPercent: 0
+  _critChanceMod: 0
+  _armorMod: 0
+  _rangeModPercent: 0
+  _dodgeMod: 0
+  _luckMod: 0
+  _harvestMod: 0
+  _startingWeaponPaths:
+  - ScriptableObjects/Weapons/Weapon_MachineGun_LightMG
+  _isUnlocked: 1
+  _unlockCondition: 
+  _unlockRequirement: 0
+  _specialAbility: 启动加速器：移�?50%持续5秒（冷却15秒）
+  _specialAbilityType: speed_boost 

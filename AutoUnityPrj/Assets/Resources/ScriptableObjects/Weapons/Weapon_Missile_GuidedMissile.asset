@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d61015218b4064cb87e0838590ad03, type: 3}
+  m_Name: Weapon_Missile_GuidedMissile
+  m_EditorClassIdentifier: 
+  _weaponId: wpn_guided_missile
+  _weaponName: 制导导弹
+  _icon: {fileID: 0}
+  _description: 超级追踪导弹，终极范围伤害
+  _weaponCategory: 2
+  _weaponType: 12
+  _damageType: 4
+  _rarity: 2
+  _damage: 80
+  _attackSpeed: 0.3
+  _range: 20
+  _level: 1
+  _maxLevel: 5
+  _pierce: 0
+  _area: 3.0
+  _duration: 0
+  _projectileSpeed: 6
+  _projectileCount: 1
+  _knockback: 5
+  _price: 450
+  _upgradeCost: 350
+  _upgradeDamagePerLevel: 0.15
+  _isDefault: 0

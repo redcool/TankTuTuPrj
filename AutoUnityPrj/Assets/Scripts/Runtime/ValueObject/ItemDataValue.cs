@@ -156,9 +156,17 @@ namespace Game.Runtime.ValueObject
             }
         }
 
-        public int MaxStack => _maxStack;
+        public int MaxStack
+        {
+            get => _maxStack;
+            set => _maxStack = Mathf.Max(1, value);
+        }
 
-        public bool CanStack => _canStack;
+        public bool CanStack
+        {
+            get => _canStack;
+            set => _canStack = value;
+        }
 
         public float Rarity
         {
@@ -221,11 +229,45 @@ namespace Game.Runtime.ValueObject
             tankData.Harvest -= _harvestBonus;
         }
 
-        #region MVP预设道具
+        #region SO 资源加载
+
+        /// <summary>
+        /// 从 Resources 加载 ItemDataSO 并转换为 ItemDataValue
+        /// </summary>
+        /// <param name="path">Resources 下的路径，例如 "ScriptableObjects/Items/heart"</param>
+        public static ItemDataValue LoadFromSO(string path)
+        {
+            var so = Resources.Load<ScriptableObjects.ItemDataSO>(path);
+            if (so == null)
+            {
+                Debug.LogWarning($"ItemDataSO not found at: {path}");
+                return null;
+            }
+            return so.ToDataValue();
+        }
+
+        /// <summary>
+        /// 批量从 Resources 加载多个 Item
+        /// </summary>
+        public static ItemDataValue[] LoadMultipleFromSO(string[] paths)
+        {
+            if (paths == null || paths.Length == 0) return System.Array.Empty<ItemDataValue>();
+            var results = new ItemDataValue[paths.Length];
+            for (int i = 0; i < paths.Length; i++)
+            {
+                results[i] = LoadFromSO(paths[i]);
+            }
+            return results;
+        }
+
+        #endregion
+
+        #region MVP预设道具 (已弃用，请使用 ItemDataSO)
 
         /// <summary>
         /// 创建生命之心（+20最大生命）
         /// </summary>
+        [System.Obsolete("请使用 ItemDataSO + LoadFromSO() 替代")]
         public static ItemDataValue CreateHeart()
         {
             return new ItemDataValue("heart", "生命之心", ItemType.Passive, 50)
@@ -256,6 +298,7 @@ namespace Game.Runtime.ValueObject
         /// <summary>
         /// 创建力量护腕（+10%伤害）
         /// </summary>
+        [System.Obsolete("请使用 ItemDataSO + LoadFromSO() 替代")]
         public static ItemDataValue CreateBracer()
         {
             return new ItemDataValue("bracer", "力量护腕", ItemType.Passive, 100)
@@ -271,6 +314,7 @@ namespace Game.Runtime.ValueObject
         /// <summary>
         /// 创建幸运硬币（+5%幸运）
         /// </summary>
+        [System.Obsolete("请使用 ItemDataSO + LoadFromSO() 替代")]
         public static ItemDataValue CreateCoin()
         {
             return new ItemDataValue("coin", "幸运硬币", ItemType.Passive, 150)
@@ -286,6 +330,7 @@ namespace Game.Runtime.ValueObject
         /// <summary>
         /// 创建丰收戒指（+10%收获）
         /// </summary>
+        [System.Obsolete("请使用 ItemDataSO + LoadFromSO() 替代")]
         public static ItemDataValue CreateRing()
         {
             return new ItemDataValue("ring", "丰收戒指", ItemType.Passive, 200)

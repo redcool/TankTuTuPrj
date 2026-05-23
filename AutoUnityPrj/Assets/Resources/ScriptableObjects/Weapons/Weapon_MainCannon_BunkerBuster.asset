@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d61015218b4064cb87e0838590ad03, type: 3}
+  m_Name: Weapon_MainCannon_BunkerBuster
+  m_EditorClassIdentifier: 
+  _weaponId: wpn_bunker_buster
+  _weaponName: 攻城炮
+  _icon: {fileID: 0}
+  _description: 终极主炮，爆炸范围伤害
+  _weaponCategory: 0
+  _weaponType: 1
+  _damageType: 0
+  _rarity: 2
+  _damage: 80
+  _attackSpeed: 0.35
+  _range: 18
+  _level: 1
+  _maxLevel: 5
+  _pierce: 3
+  _area: 1.5
+  _duration: 0
+  _projectileSpeed: 12
+  _projectileCount: 1
+  _knockback: 6
+  _price: 400
+  _upgradeCost: 300
+  _upgradeDamagePerLevel: 0.15
+  _isDefault: 0

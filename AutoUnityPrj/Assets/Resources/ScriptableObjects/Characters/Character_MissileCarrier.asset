@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7497ad52d2f594a834baf60b117faa, type: 3}
+  m_Name: Character_MissileCarrier
+  m_EditorClassIdentifier:
+  _characterId: flame
+  _characterName: 喷火坦克
+  _vehicleType: 4
+  _icon: {fileID: 0}
+  _description: 近战灼烧战车，火焰喷射范围伤害。持续灼烧，焚烧一切�?
+  _maxHealth: 130
+  _healthRegen: 0.8
+  _lifesteal: 0.05
+  _percentDamage: 0
+  _rangedDamage: 0
+  _meleeDamage: 0
+  _elementDamage: 0
+  _engineering: 0
+  _attackSpeed: 1
+  _critRate: 10
+  _range: 4
+  _aimAccuracy: 0.9
+  _armor: 3
+  _dodge: 5
+  _moveSpeed: 2.8
+  _luck: 0
+  _harvest: 1
+  _maxHpMod: 0
+  _speedModPercent: 0
+  _attackSpeedModPercent: 0
+  _critChanceMod: 0
+  _armorMod: 0
+  _rangeModPercent: 0
+  _dodgeMod: 0
+  _luckMod: 0
+  _harvestMod: 0
+  _startingWeaponPaths:
+  - ScriptableObjects/Weapons/Weapon_Sprayer_FlameSprayer
+  _isUnlocked: 0
+  _unlockCondition: 累计造成5000火焰伤害
+  _unlockRequirement: 5000
+  _specialAbility: 烈火燎原：火焰伤�?50%，持�?秒灼烧DoT
+  _specialAbilityType: fire_brand 

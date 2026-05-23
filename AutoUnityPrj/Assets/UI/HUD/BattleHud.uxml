@@ -1,0 +1,172 @@
+﻿<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/HUD/BattleHud.uss?fileID=7433441132597879392&amp;guid=a9d29ee5e47b7d544b064aa462bbf555&amp;type=3#BattleHud" />
+
+    <!-- ════════════════════════════════════════ -->
+    <!--  战斗 HUD — 四人分居四角              -->
+    <!--  面板 400×120 紧凑布局                 -->
+    <!--  每面板: header(头像+名字+宝箱)        -->
+    <!--          HP行(值+进度条)                -->
+    <!--          EXP行(值+进度条+等级徽章)      -->
+    <!-- ════════════════════════════════════════ -->
+    <ui:VisualElement name="panel-battle-hud">
+
+        <!-- ── Player 1 (左上) ── -->
+        <ui:VisualElement name="player-1-panel" class="player-panel player-panel-top-left">
+            <!-- 头部: 头像 + 名字 + 宝箱 -->
+            <ui:VisualElement class="panel-header-row">
+                <ui:VisualElement name="p1-avatar" class="player-avatar" />
+                <ui:Label name="p1-name" class="player-name" text="玩家 1" />
+                <!-- 宝箱行 (右侧) -->
+                <ui:VisualElement name="p1-chest-row" class="chest-row">
+                    <ui:VisualElement name="p1-chest-1" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p1-chest-1-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="p1-chest-2" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p1-chest-2-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="p1-chest-3" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p1-chest-3-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- HP 行: 值 + 进度条 -->
+            <ui:VisualElement class="stat-row">
+                <ui:Label name="p1-hp-value" class="stat-label hp-label" text="100 / 100" />
+                <ui:VisualElement name="p1-hp-bar-bg" class="stat-bar-bg">
+                    <ui:VisualElement name="p1-hp-bar" class="stat-bar-fill hp-fill" style="width: 100%;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- EXP 行: 值 + 进度条 + 等级徽章 -->
+            <ui:VisualElement class="stat-row">
+                <ui:Label name="p1-exp-value" class="stat-label exp-label" text="EXP 0 / 100" />
+                <ui:VisualElement name="p1-exp-bar-bg" class="stat-bar-bg">
+                    <ui:VisualElement name="p1-exp-bar" class="stat-bar-fill exp-fill" style="width: 0%;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p1-level-badge" class="level-badge">
+                    <ui:VisualElement class="level-badge-icon" />
+                    <ui:Label name="p1-level-count" class="level-badge-count" text="0" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── Player 2 (右上) ── -->
+        <ui:VisualElement name="player-2-panel" class="player-panel player-panel-top-right">
+            <ui:VisualElement class="panel-header-row">
+                <ui:VisualElement name="p2-avatar" class="player-avatar" />
+                <ui:Label name="p2-name" class="player-name" text="玩家 2" />
+                <ui:VisualElement name="p2-chest-row" class="chest-row">
+                    <ui:VisualElement name="p2-chest-1" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p2-chest-1-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="p2-chest-2" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p2-chest-2-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="p2-chest-3" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p2-chest-3-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="stat-row">
+                <ui:Label name="p2-hp-value" class="stat-label hp-label" text="100 / 100" />
+                <ui:VisualElement name="p2-hp-bar-bg" class="stat-bar-bg">
+                    <ui:VisualElement name="p2-hp-bar" class="stat-bar-fill hp-fill" style="width: 100%;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="stat-row">
+                <ui:Label name="p2-exp-value" class="stat-label exp-label" text="EXP 0 / 100" />
+                <ui:VisualElement name="p2-exp-bar-bg" class="stat-bar-bg">
+                    <ui:VisualElement name="p2-exp-bar" class="stat-bar-fill exp-fill" style="width: 0%;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p2-level-badge" class="level-badge">
+                    <ui:VisualElement class="level-badge-icon" />
+                    <ui:Label name="p2-level-count" class="level-badge-count" text="0" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── Player 3 (左下) ── -->
+        <ui:VisualElement name="player-3-panel" class="player-panel player-panel-bottom-left">
+            <ui:VisualElement class="panel-header-row">
+                <ui:VisualElement name="p3-avatar" class="player-avatar" />
+                <ui:Label name="p3-name" class="player-name" text="玩家 3" />
+                <ui:VisualElement name="p3-chest-row" class="chest-row">
+                    <ui:VisualElement name="p3-chest-1" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p3-chest-1-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="p3-chest-2" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p3-chest-2-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="p3-chest-3" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p3-chest-3-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="stat-row">
+                <ui:Label name="p3-hp-value" class="stat-label hp-label" text="100 / 100" />
+                <ui:VisualElement name="p3-hp-bar-bg" class="stat-bar-bg">
+                    <ui:VisualElement name="p3-hp-bar" class="stat-bar-fill hp-fill" style="width: 100%;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="stat-row">
+                <ui:Label name="p3-exp-value" class="stat-label exp-label" text="EXP 0 / 100" />
+                <ui:VisualElement name="p3-exp-bar-bg" class="stat-bar-bg">
+                    <ui:VisualElement name="p3-exp-bar" class="stat-bar-fill exp-fill" style="width: 0%;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p3-level-badge" class="level-badge">
+                    <ui:VisualElement class="level-badge-icon" />
+                    <ui:Label name="p3-level-count" class="level-badge-count" text="0" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── Player 4 (右下) ── -->
+        <ui:VisualElement name="player-4-panel" class="player-panel player-panel-bottom-right">
+            <ui:VisualElement class="panel-header-row">
+                <ui:VisualElement name="p4-avatar" class="player-avatar" />
+                <ui:Label name="p4-name" class="player-name" text="玩家 4" />
+                <ui:VisualElement name="p4-chest-row" class="chest-row">
+                    <ui:VisualElement name="p4-chest-1" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p4-chest-1-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="p4-chest-2" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p4-chest-2-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="p4-chest-3" class="chest-slot" style="display: none;">
+                        <ui:VisualElement class="chest-icon" />
+                        <ui:Label name="p4-chest-3-count" class="chest-count-badge" text="0" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="stat-row">
+                <ui:Label name="p4-hp-value" class="stat-label hp-label" text="100 / 100" />
+                <ui:VisualElement name="p4-hp-bar-bg" class="stat-bar-bg">
+                    <ui:VisualElement name="p4-hp-bar" class="stat-bar-fill hp-fill" style="width: 100%;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="stat-row">
+                <ui:Label name="p4-exp-value" class="stat-label exp-label" text="EXP 0 / 100" />
+                <ui:VisualElement name="p4-exp-bar-bg" class="stat-bar-bg">
+                    <ui:VisualElement name="p4-exp-bar" class="stat-bar-fill exp-fill" style="width: 0%;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p4-level-badge" class="level-badge">
+                    <ui:VisualElement class="level-badge-icon" />
+                    <ui:Label name="p4-level-count" class="level-badge-count" text="0" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="project://database/Assets/UI/Common/Common.uss" />
+    <ui:Style src="project://database/Assets/UI/WeaponSelect/WeaponCard.uss" />
+    
+    <ui:VisualElement class="wc-card" name="card-root">
+        <ui:VisualElement class="wc-icon" name="wc-icon">
+            <ui:Image class="wc-icon-image" name="wc-icon-image" />
+        </ui:VisualElement>
+        <ui:Label text="" class="heading-md wc-name" name="wc-name" />
+        <ui:Label text="" class="text-secondary wc-dmg" name="wc-dmg" />
+        <ui:VisualElement class="wc-tags" name="wc-tags">
+            <ui:Label text="" class="tag" name="wc-type-tag" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

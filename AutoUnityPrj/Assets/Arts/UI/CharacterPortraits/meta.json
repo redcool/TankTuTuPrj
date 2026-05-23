@@ -1,0 +1,100 @@
+{
+  "schema": "1.0",
+  "description": "角色头像元数据 - 铁皮突突 (TankTuTu)",
+  "generated_at": "2026-05-22",
+  "generation_pipeline": "ComfyUI Z-Image-Turbo",
+  "format": "PNG 1024×1024",
+  "background": "white",
+  "files": [
+    {
+      "filename": "HeavyTank.png",
+      "source": "Vehicle_HeavyTank_00001_.png",
+      "vehicle_type": "TANK",
+      "display_name": "重型坦克",
+      "description": "高血量高护甲移动慢的主战坦克",
+      "seed": 0,
+      "prompt": "A heavy main battle tank, top-down view, white background, military green camouflage paint, thick armor, large turret, wide tracks, realistic PBR render, game icon, studio lighting"
+    },
+    {
+      "filename": "LightTank.png",
+      "source": "Vehicle_LightTank_00001_.png",
+      "vehicle_type": "LIGHT",
+      "display_name": "轻型坦克",
+      "description": "高速侦察灵活机动的轻型战车",
+      "seed": 0,
+      "prompt": "A light reconnaissance tank, top-down view, white background, desert yellow paint, small turret, compact body, thin armor, fast-looking design, game icon, PBR render"
+    },
+    {
+      "filename": "AssaultGun.png",
+      "source": "Vehicle_AssaultGun_00001_.png",
+      "vehicle_type": "TANK",
+      "display_name": "突击炮",
+      "description": "正面攻坚装甲厚的歼击战车",
+      "seed": 0,
+      "prompt": "A tank destroyer, top-down view, white background, dark green paint, no turret, fixed casemate, long barrel cannon, low profile, game icon, PBR render"
+    },
+    {
+      "filename": "Artillery.png",
+      "source": "Vehicle_Artillery_00001_.png",
+      "vehicle_type": "SPG",
+      "display_name": "自行火炮",
+      "description": "远程范围打击弹道高的自行火炮",
+      "seed": 0,
+      "prompt": "A self-propelled howitzer, top-down view, white background, military green paint, open-top chassis, very long barrel, rear spade anchors, game icon, PBR render"
+    },
+    {
+      "filename": "MissileCarrier.png",
+      "source": "Vehicle_MissileCarrier_00001_.png",
+      "vehicle_type": "SPG",
+      "display_name": "导弹车",
+      "description": "远程精确制导打击的导弹发射车",
+      "seed": 0,
+      "prompt": "A missile carrier vehicle, top-down view, white background, military green paint, missile launch tubes on roof, boxy chassis, rocket pods, game icon, PBR render"
+    },
+    {
+      "filename": "SPAAG.png",
+      "source": "Vehicle_SPAAG_00001_.png",
+      "vehicle_type": "SPG",
+      "display_name": "自行防空炮",
+      "description": "对空加轻甲目标克星的自行高炮",
+      "seed": 0,
+      "prompt": "A self-propelled anti-aircraft gun, top-down view, white background, military green paint, radar dish, dual anti-air cannons, square hull, game icon, PBR render"
+    },
+    {
+      "filename": "ScoutJeep.png",
+      "source": "Vehicle_ScoutJeep_00001_.png",
+      "vehicle_type": "LIGHT",
+      "display_name": "侦察吉普",
+      "description": "高速游击视野广的轻型侦察车",
+      "seed": 0,
+      "prompt": "A scout jeep, top-down view, white background, sand yellow paint, open roof, mounted machine gun, lightweight frame, off-road tires, game icon, PBR render"
+    },
+    {
+      "filename": "APC.png",
+      "source": "Vehicle_APC_00001_.png",
+      "vehicle_type": "APC",
+      "display_name": "装甲运兵车",
+      "description": "运载加支援可部署步兵的装甲车",
+      "seed": 0,
+      "prompt": "An armored personnel carrier, top-down view, white background, military green paint, boxy hull, large troop compartment, small machine gun turret, urban camouflage, game icon, PBR render"
+    },
+    {
+      "filename": "IFV.png",
+      "source": "Vehicle_IFV_00001_.png",
+      "vehicle_type": "APC",
+      "display_name": "步兵战车",
+      "description": "多功能战斗火力均衡的步兵战车",
+      "seed": 0,
+      "prompt": "An infantry fighting vehicle, top-down view, white background, urban gray camouflage paint, sloped armor, large hatch, medium-caliber cannon, modern design, game icon, PBR render"
+    },
+    {
+      "filename": "Engineer.png",
+      "source": "Vehicle_Engineer_00001_.png",
+      "vehicle_type": "SPECIAL",
+      "display_name": "工程车",
+      "description": "维修加部署防御工事的工程支援车",
+      "seed": 0,
+      "prompt": "An engineering support vehicle, top-down view, white background, yellow and green paint, crane arm, tool boxes, bulldozer blade front, heavy equipment, game icon, PBR render"
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+﻿/* TankTuTu - BattleHud.uss 战斗 HUD 样式 */
+/* 四角玩家信息面板 — 400x120 紧凑布局 */
+
+/* ========== HUD 根容器 ========== */
+#panel-battle-hud {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+/* ========== 玩家面板 ========== */
+.player-panel {
+    position: absolute;
+    width: 400px;
+    height: 120px;
+    background-color: rgba(0, 0, 0, 0.55);
+    border-color: rgba(74, 124, 63, 0.4);
+    border-width: 1px;
+    border-radius: 8px;
+    padding: 8px 10px;
+    flex-direction: column;
+    pointer-events: auto;
+}
+
+.player-panel-top-left {
+    left: 16px;
+    top: 16px;
+}
+
+.player-panel-top-right {
+    right: 16px;
+    top: 16px;
+}
+
+.player-panel-bottom-left {
+    left: 16px;
+    bottom: 16px;
+}
+
+.player-panel-bottom-right {
+    right: 16px;
+    bottom: 16px;
+}
+
+/* ========== 面板头部行 (头像 + 名字 + 宝箱) ========== */
+.panel-header-row {
+    flex-direction: row;
+    align-items: center;
+    height: 32px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+}
+
+.player-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.player-name {
+    font-size: 13px;
+    color: #e0e0e0;
+    -unity-font-style: bold;
+    unity-text-align: middle-left;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ========== 属性行 (HP / EXP) ========== */
+.stat-row {
+    flex-direction: row;
+    align-items: center;
+    height: 22px;
+    margin-bottom: 3px;
+    flex-shrink: 0;
+}
+
+.stat-label {
+    font-size: 11px;
+    -unity-font-style: bold;
+    width: 72px;
+    flex-shrink: 0;
+    margin-right: 4px;
+    unity-text-align: middle-left;
+    white-space: nowrap;
+}
+
+.hp-label {
+    color: #c84444;
+}
+
+.exp-label {
+    color: #a0d0a0;
+}
+
+.stat-bar-bg {
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    overflow: hidden;
+    flex-grow: 1;
+    margin-right: 6px;
+}
+
+.stat-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.2s;
+}
+
+.hp-fill {
+    background-color: #4caf50;
+}
+
+.hp-fill.danger {
+    background-color: #c84444;
+}
+
+.hp-fill.warning {
+    background-color: #d4a844;
+}
+
+.exp-fill {
+    background-color: #4a7c3f;
+}
+
+/* ========== 升级等级徽章 ========== */
+.level-badge {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    position: relative;
+    margin-left: 2px;
+}
+
+.level-badge-icon {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background-color: rgba(255, 215, 0, 0.15);
+    border-color: rgba(255, 215, 0, 0.4);
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.level-badge-count {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    font-size: 9px;
+    color: #fff;
+    background-color: #c84444;
+    border-radius: 7px;
+    min-width: 14px;
+    height: 14px;
+    padding: 0 3px;
+    unity-text-align: middle-center;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+/* ========== 宝箱行 ========== */
+.chest-row {
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.chest-slot {
+    width: 26px;
+    height: 26px;
+    margin-left: 2px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.chest-icon {
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background-color: rgba(212, 168, 68, 0.12);
+    border-color: rgba(212, 168, 68, 0.3);
+    border-width: 1px;
+    border-radius: 3px;
+}
+
+.chest-count-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    font-size: 9px;
+    color: #fff;
+    background-color: #d4a844;
+    border-radius: 6px;
+    min-width: 13px;
+    height: 13px;
+    padding: 0 2px;
+    unity-text-align: middle-center;
+    -unity-font-style: bold;
+}
+
+/* ========== 隐藏不可见玩家 ========== */
+.player-panel.hidden {
+    display: none;
+}

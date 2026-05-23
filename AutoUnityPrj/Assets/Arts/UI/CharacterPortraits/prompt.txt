@@ -1,0 +1,73 @@
+角色头像生成提示词模板
+
+通用模板：
+  战车类型描述, 俯视角, 白色背景, 游戏图标,
+  金属质感, {涂装色}涂装, 写实风格,
+  高保真材质, PBR渲染, 游戏资产,
+  studio lighting, clean white background, isometric view
+
+各角色提示词：
+
+1. HeavyTank.png - 重型坦克
+   "A heavy main battle tank, top-down view, white background,
+   military green camouflage paint, thick armor, large turret,
+   wide tracks, realistic PBR render, game icon, studio lighting"
+
+2. LightTank.png - 轻型坦克
+   "A light reconnaissance tank, top-down view, white background,
+   desert yellow paint, small turret, compact body,
+   thin armor, fast-looking design, game icon, PBR render"
+
+3. AssaultGun.png - 突击炮
+   "A tank destroyer, top-down view, white background,
+   dark green paint, no turret, fixed casemate,
+   long barrel cannon, low profile, game icon, PBR render"
+
+4. Artillery.png - 自行火炮
+   "A self-propelled howitzer, top-down view, white background,
+   military green paint, open-top chassis, very long barrel,
+   rear spade anchors, game icon, PBR render"
+
+5. MissileCarrier.png - 导弹车
+   "A missile carrier vehicle, top-down view, white background,
+   military green paint, missile launch tubes on roof,
+   boxy chassis, rocket pods, game icon, PBR render"
+
+6. SPAAG.png - 自行防空炮
+   "A self-propelled anti-aircraft gun, top-down view,
+   white background, military green paint, radar dish,
+   dual anti-air cannons, square hull, game icon, PBR render"
+
+7. ScoutJeep.png - 侦察吉普
+   "A scout jeep, top-down view, white background,
+   sand yellow paint, open roof, mounted machine gun,
+   lightweight frame, off-road tires, game icon, PBR render"
+
+8. APC.png - 装甲运兵车
+   "An armored personnel carrier, top-down view,
+   white background, military green paint, boxy hull,
+   large troop compartment, small machine gun turret,
+   urban camouflage, game icon, PBR render"
+
+9. IFV.png - 步兵战车
+   "An infantry fighting vehicle, top-down view,
+   white background, urban gray camouflage paint,
+   sloped armor, large hatch, medium-caliber cannon,
+   modern design, game icon, PBR render"
+
+10. Engineer.png - 工程车
+    "An engineering support vehicle, top-down view,
+    white background, yellow and green paint,
+    crane arm, tool boxes, bulldozer blade front,
+    heavy equipment, game icon, PBR render"
+
+生成参数：
+  模型: z_image_turbo_bf16.safetensors (diffusion_models)
+  CLIP: qwen_3_4b.safetensors (type: qwen_image)
+  VAE: ae.safetensors
+  尺寸: 1024×1024
+  步数: 4
+  CFG: 1.0
+  采样器: euler
+  调度器: simple
+  ModelSamplingAuraFlow shift: 3.0

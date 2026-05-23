@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="project://database/Assets/UI/Common/Common.uss" />
+    <ui:Style src="project://database/Assets/UI/CharacterSelect/CharacterCard.uss" />
+    
+    <ui:VisualElement class="cc-card" name="card-root">
+        <ui:Label text="" class="tag" name="cc-vehicle-tag" />
+        <!-- 锁定图标 - 右上角 -->
+        <ui:Image class="cc-lock-icon" name="cc-lock-icon" style="display: none;" />
+        <!-- 保留布局空间，通过 opacity 控制显隐以保证卡片高度一致 -->
+        <ui:VisualElement class="cc-icon" name="cc-icon">
+            <ui:Image class="cc-icon-image" name="cc-icon-image" />
+        </ui:VisualElement>
+        <ui:Label text="" class="heading-md cc-name" name="cc-name" />
+        <ui:VisualElement class="cc-stats">
+            <ui:Label text="" class="text-secondary cc-hp" name="cc-hp" />
+            <ui:Label text="" class="text-secondary cc-speed" name="cc-speed" />
+        </ui:VisualElement>
+        <!-- 解锁条件文字 - 图标下方（始终占位保证高度一致，opacity控制显隐） -->
+        <ui:Label text="" class="cc-lock-text-below" name="cc-lock-text" />
+    </ui:VisualElement>
+</ui:UXML>

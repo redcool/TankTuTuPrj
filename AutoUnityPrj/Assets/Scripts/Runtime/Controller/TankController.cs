@@ -1,45 +1,41 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Game.Runtime.ValueObject;
 using Game.Runtime.ValueObject.ScriptableObjects;
 
 /// <summary>
-/// 战车控制器 - 负责战车移动、转向和属性管理
-/// 作者：AI
-/// 最后修改时间：2026-04-03
+/// Tank Controller - manages tank movement, rotation and attributes
+/// Data source: loads CharacterDataSO from GameManager.SelectedCharacterId
+/// Model source: dynamically loads kenney_car model based on character via CharacterModelMapper
+/// Weapon slots: dynamically created in 360° around the tank based on SelectedWeaponDatas
 /// </summary>
 namespace Game.Runtime.Controller
 {
     public class TankController : MonoBehaviour
     {
-        // 常量
         private const string TAG_ENEMY = "Enemy";
         private const string TAG_RESOURCE = "Resource";
+        private const string CHARACTERS_RESOURCE_PATH = "ScriptableObjects/Characters/Character_";
+        private const string CARS_RESOURCE_PATH = "Prefabs/Cars/";
+        private const string WEAPONS_RESOURCE_PATH = "Prefabs/Weapons/";
+        private const float WEAPON_SLOT_RADIUS = 1.5f;
+        private const float WEAPON_SLOT_HEIGHT = 1.0f;
+        private const int MAX_WEAPON_SLOTS = 6;
 
-        // 序列化字段
-        [Header("输入设置")]
+        [Header("Input Settings")]
         [SerializeField] private int _playerIndex = 0;
 
-        [Header("坦克预制体")]
+        [Header("Tank Prefab (fallback)")]
         [SerializeField] private GameObject _tankPrefab = null!;
 
-        [Header("战车数据 (ScriptableObject)")]
-        [SerializeField] private TankDataSO _tankDataSO;
-        
-        /// <summary>
-        /// 设置战车数据SO (供外部代码使用,避免反射)
-        /// </summary>
-        public TankDataSO TankDataSOSetter
-        {
-            get => _tankDataSO;
-            set => _tankDataSO = value;
-        }
+        [Header("Default Character ID (used when GameManager not set)")]
+        [SerializeField] private string _defaultCharacterId = "mbt";
 
-        [Header("组件缓存")]
+        [Header("Component Cache")]
         [SerializeField] private Transform _weaponSlotsRoot;
         [SerializeField] private Transform _modelContainer;
 
-        // 私有字段
         private GameObject _tankInstance;
         private Rigidbody _rigidbody;
         private TankDataValue _tankData;
@@ -47,22 +43,16 @@ namespace Game.Runtime.Controller
         private Vector2 _moveInput;
         private PlayerInput _playerInput;
         private InputAction _moveAction;
-
-        // 摄像机缓存
         private Camera _mainCamera;
 
-        // 公有属性
         public TankDataValue TankData => _tankData;
         public int PlayerIndex => _playerIndex;
         public bool IsAlive => _tankData.CurrentHealth > 0;
 
-        // 生命周期
         private void Awake()
         {
-            // 先初始化数据，再缓存组件（确保数据可用）
             InitializeData();
             CacheComponents();
-            // 流程更新：先实例化坦克，再查找slots，再初始化其他
             InstantiateTank();
             SetupWeaponSlots();
             SetupInput();
@@ -105,10 +95,8 @@ namespace Game.Runtime.Controller
             }
         }
 
-        // 私有方法
         private void CacheComponents()
         {
-            // 物理组件从 PlayerTank (当前 gameObject) 获取
             _rigidbody = GetComponent<Rigidbody>();
             if (_rigidbody == null)
             {
@@ -116,109 +104,114 @@ namespace Game.Runtime.Controller
                 _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
                 _rigidbody.useGravity = false;
             }
-
-            // 缓存主摄像机
             _mainCamera = Camera.main;
         }
 
         private void InstantiateTank()
         {
-            // 确保 Model_Container 存在
             if (_modelContainer == null)
             {
                 _modelContainer = transform.Find("Model_Container");
             }
-            
+
             if (_modelContainer == null)
             {
-                Debug.LogWarning("[TankController] 未找到 Model_Container 子物体");
+                Debug.LogWarning("[TankController] Model_Container not found");
                 return;
             }
 
-            // 实例化坦克模型到 Model_Container 下
-            if (_tankPrefab != null)
-            {
-                _tankInstance = Instantiate(_tankPrefab, _modelContainer.position, Quaternion.identity, _modelContainer);
-                
-                // 保持原始旋转
-                _tankInstance.transform.localRotation = Quaternion.identity;
-                
-                Debug.Log($"[TankController] 已生成坦克模型到 Model_Container: {_tankInstance.name}");
+            // ── 动态加载角色对应的 kenney_car 模型 ──
+            string characterId = GetLoadedCharacterId();
+            string modelName = CharacterModelMapper.GetModelName(characterId);
+            // 车辆预制体统一以 car_ 前缀命名（见 CreateModelPrefabs.cs）
+            var carPrefab = Resources.Load<GameObject>(CARS_RESOURCE_PATH + "car_" + modelName);
 
-                // 从实例化的坦克中查找武器槽位
-                FindWeaponSlotsFromInstance();
+            if (carPrefab != null)
+            {
+                _tankInstance = Instantiate(carPrefab, _modelContainer.position, Quaternion.identity, _modelContainer);
+                _tankInstance.transform.localRotation = Quaternion.identity;
+                Debug.Log($"[TankController] Tank model loaded: {modelName} (character: {characterId})");
             }
             else
             {
-                Debug.LogWarning("[TankController] _tankPrefab 为 null，请拖入坦克模型 prefab");
-            }
-        }
-
-        /// <summary>
-        /// 从实例化的坦克中查找武器槽位 (Slot0, Slot1, ...)
-        /// </summary>
-        private void FindWeaponSlotsFromInstance()
-        {
-            if (_tankInstance == null) return;
-
-            // 尝试在实例化坦克下查找名为 "WeaponSlots" 或 "Slots" 的父节点
-            Transform slotsRoot = _tankInstance.transform.Find("WeaponSlots");
-            if (slotsRoot == null)
-            {
-                slotsRoot = _tankInstance.transform.Find("Slots");
-            }
-
-            // 如果没找到父节点，尝试查找直接子级中包含 "Slot" 的
-            if (slotsRoot == null)
-            {
-                for (int i = 0; i < _tankInstance.transform.childCount; i++)
+                // ── 回退：使用 _tankPrefab（编辑器引用） ──
+                Debug.LogWarning($"[TankController] Car prefab not found: {modelName}, fallback to _tankPrefab");
+                if (_tankPrefab != null)
                 {
-                    Transform child = _tankInstance.transform.GetChild(i);
-                    if (child.name.Contains("Slot"))
-                    {
-                        // 找到第一个Slot，假设同级的都是Slot
-                        Transform parent = child.parent;
-                        if (parent != null && parent.childCount >= 6)
-                        {
-                            slotsRoot = parent;
-                            break;
-                        }
-                    }
+                    _tankInstance = Instantiate(_tankPrefab, _modelContainer.position, Quaternion.identity, _modelContainer);
+                    _tankInstance.transform.localRotation = Quaternion.identity;
+                    Debug.Log($"[TankController] Fallback tank model: {_tankPrefab.name}");
+                }
+                else
+                {
+                    Debug.LogWarning("[TankController] _tankPrefab is null, no tank model spawned");
+                    return;
                 }
             }
 
-            if (slotsRoot != null)
-            {
-                _weaponSlotsRoot = slotsRoot;
-                Debug.Log($"[TankController] 找到武器槽位根节点: {slotsRoot.name}");
-            }
-            else
-            {
-                Debug.LogWarning("[TankController] 未找到武器槽位，请检查预制体配置");
-            }
+            // 武器槽不再从模型中查找，由 CreateDynamicWeaponSlots 动态生成
+        }
+
+        /// <summary>
+        /// 获取已加载的角色 ID（从 _tankData 反推）
+        /// </summary>
+        private string GetLoadedCharacterId()
+        {
+            if (GameManager.Instance != null && !string.IsNullOrEmpty(GameManager.Instance.SelectedCharacterId))
+                return GameManager.Instance.SelectedCharacterId;
+
+            return _defaultCharacterId;
         }
 
         private void InitializeData()
         {
-            if (_tankData == null)
+            if (_tankData != null) return;
+
+            // 优先使用 GameManager 已缓存的 CharacterDataSO（CharacterSelectPresenter 已写入）
+            if (GameManager.Instance?.SelectedCharacterData != null)
             {
-                // 优先使用SO，如果没有则创建默认的
-                if (_tankDataSO != null)
+                _tankData = GameManager.Instance.SelectedCharacterData.ToTankDataValue();
+                Debug.Log($"[TankController] Loaded from GameManager cache: {GameManager.Instance.SelectedCharacterData.CharacterName}");
+                return;
+            }
+
+            // 回退：按角色 ID 重新加载
+            string characterId = "";
+            if (GameManager.Instance != null && !string.IsNullOrEmpty(GameManager.Instance.SelectedCharacterId))
+            {
+                characterId = GameManager.Instance.SelectedCharacterId;
+                Debug.Log($"[TankController] Loading character by ID: {characterId}");
+            }
+            else
+            {
+                characterId = _defaultCharacterId;
+                Debug.Log($"[TankController] Using default character: {characterId}");
+            }
+
+            string assetName = char.ToUpper(characterId[0]) + characterId.Substring(1);
+            var charData = Resources.Load<CharacterDataSO>(CHARACTERS_RESOURCE_PATH + assetName);
+
+            if (charData != null)
+            {
+                _tankData = charData.ToTankDataValue();
+                Debug.Log($"[TankController] Loaded: {charData.CharacterName}");
+            }
+            else
+            {
+                charData = Resources.Load<CharacterDataSO>("ScriptableObjects/Characters/" + characterId);
+                if (charData != null)
                 {
-                    _tankData = _tankDataSO.ToDataValue();
-                    Debug.Log($"[TankController] 从SO加载战车数据: {_tankDataSO.name}");
+                    _tankData = charData.ToTankDataValue();
+                    Debug.Log($"[TankController] Loaded (direct): {charData.CharacterName}");
                 }
                 else
                 {
                     _tankData = new TankDataValue();
-                    Debug.LogWarning("[TankController] 未配置TankDataSO，使用默认数据");
+                    Debug.LogWarning($"[TankController] Character data not found (ID: {characterId}), using defaults");
                 }
             }
         }
 
-        /// <summary>
-        /// 重新初始化数据 (供外部代码调用)
-        /// </summary>
         public void ReinitializeData()
         {
             _tankData = null;
@@ -227,13 +220,222 @@ namespace Game.Runtime.Controller
 
         private void SetupWeaponSlots()
         {
-            if (_weaponSlotsRoot != null)
+            // 不再从模型预制体读取武器槽，改为动态 360° 生成
+            CreateDynamicWeaponSlots();
+        }
+
+        /// <summary>
+        /// 动态创建 360° 武器槽位
+        /// 根据 GameManager.SelectedWeaponDatas 数量在圆周上等分
+        /// </summary>
+        private void CreateDynamicWeaponSlots()
+        {
+            // 创建武器槽根节点
+            GameObject slotsRootObj = new GameObject("DynamicWeaponSlots");
+            slotsRootObj.transform.SetParent(transform, false);
+            _weaponSlotsRoot = slotsRootObj.transform;
+
+            // ── 收集武器数据并按名字配对 ──
+            List<WeaponDataSO> weapons = GetWeaponDataList();
+
+            if (weapons == null || weapons.Count == 0)
             {
-                _weaponSlots = new Transform[_weaponSlotsRoot.childCount];
-                for (int i = 0; i < _weaponSlotsRoot.childCount; i++)
+                Debug.LogWarning("[TankController] 无武器数据，创建 1 个默认机关炮槽位");
+                CreateSingleSlotWithDefaultWeapon(0);
+                BuildWeaponSlotsArray();
+                return;
+            }
+
+            // 按角色初始武器名字进行配对
+            weapons = MatchWeaponsToCharacter(weapons);
+
+            int count = Mathf.Clamp(weapons.Count, 1, MAX_WEAPON_SLOTS);
+
+            for (int i = 0; i < count; i++)
+            {
+                GameObject slotObj = new GameObject($"WeaponSlot_{i}");
+                slotObj.transform.SetParent(slotsRootObj.transform, false);
+
+                // 360° 环绕定位
+                float angleDeg = i * (360f / count);
+                float angleRad = angleDeg * Mathf.Deg2Rad;
+                float x = WEAPON_SLOT_RADIUS * Mathf.Sin(angleRad);
+                float z = WEAPON_SLOT_RADIUS * Mathf.Cos(angleRad);
+                slotObj.transform.localPosition = new Vector3(x, WEAPON_SLOT_HEIGHT, z);
+                slotObj.transform.localRotation = Quaternion.Euler(0, angleDeg, 0);
+
+                var slot = slotObj.AddComponent<WeaponSlot>();
+                slot.SlotIndex = i;
+
+                // 安装武器
+                if (i < weapons.Count && weapons[i] != null)
                 {
-                    _weaponSlots[i] = _weaponSlotsRoot.GetChild(i);
+                    InstallWeaponIntoSlot(slot, weapons[i]);
                 }
+            }
+
+            BuildWeaponSlotsArray();
+            Debug.Log($"[TankController] 动态创建了 {_weaponSlots.Length} 个武器槽 (360°分布, {count}件武器)");
+        }
+
+        /// <summary>
+        /// 从 GameManager 获取武器数据列表
+        /// </summary>
+        private List<WeaponDataSO> GetWeaponDataList()
+        {
+            if (GameManager.Instance != null &&
+                GameManager.Instance.SelectedWeaponDatas != null &&
+                GameManager.Instance.SelectedWeaponDatas.Count > 0)
+            {
+                return GameManager.Instance.SelectedWeaponDatas;
+            }
+
+            // 兼容旧版单武器数据
+            if (GameManager.Instance != null && GameManager.Instance.SelectedWeaponData != null)
+            {
+                return new List<WeaponDataSO> { GameManager.Instance.SelectedWeaponData };
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 按名字配对武器：将已选择的武器与角色的初始武器进行配对
+        /// 先尝试按名字匹配（武器名/武器ID包含起始武器名），未匹配的武器按顺序补位
+        /// </summary>
+        private List<WeaponDataSO> MatchWeaponsToCharacter(List<WeaponDataSO> selectedWeapons)
+        {
+            // 优先使用 GameManager 已缓存的 CharacterDataSO
+            CharacterDataSO charData = GameManager.Instance?.SelectedCharacterData;
+            string charId = GetLoadedCharacterId();
+            if (charData == null)
+            {
+                // 回退：按角色 ID 重新加载
+                string assetName = char.ToUpper(charId[0]) + charId.Substring(1);
+                charData = Resources.Load<CharacterDataSO>(CHARACTERS_RESOURCE_PATH + assetName);
+            }
+
+            if (charData?.StartingWeaponPaths == null || charData.StartingWeaponPaths.Length == 0)
+            {
+                Debug.Log($"[TankController] 角色 {charId} 无起始武器配置，武器按顺序安装");
+                return selectedWeapons;
+            }
+
+            // 从路径中提取起始武器的名字片段（最后一个 _ 之后的部分，转小写）
+            var startingWeaponTokens = new List<string>();
+            foreach (var path in charData.StartingWeaponPaths)
+            {
+                int idx = path.LastIndexOf('_');
+                string token = idx >= 0 ? path.Substring(idx + 1) : path;
+                startingWeaponTokens.Add(token.ToLower());
+                Debug.Log($"[TankController] 角色初始武器路径: {path} → 匹配Token: {token}");
+            }
+
+            // 配对：已匹配的放前面（按起始武器顺序），未匹配的放后面
+            var matched = new List<WeaponDataSO>();
+            var remaining = new List<WeaponDataSO>(selectedWeapons);
+
+            foreach (var token in startingWeaponTokens)
+            {
+                // 在剩余武器中找名字或ID包含该Token的
+                int matchIdx = -1;
+                for (int i = 0; i < remaining.Count; i++)
+                {
+                    if (remaining[i] == null) continue;
+                    string wName = (remaining[i].WeaponName ?? "").ToLower();
+                    string wId = (remaining[i].WeaponId ?? "").ToLower();
+                    if (wName.Contains(token) || wId.Contains(token))
+                    {
+                        matchIdx = i;
+                        break;
+                    }
+                }
+
+                if (matchIdx >= 0)
+                {
+                    matched.Add(remaining[matchIdx]);
+                    Debug.Log($"[TankController] 武器配对成功: {remaining[matchIdx].WeaponName} ↔ {token}");
+                    remaining.RemoveAt(matchIdx);
+                }
+                else
+                {
+                    matched.Add(null); // 该位置无匹配，使用占位符
+                }
+            }
+
+            // 重新组装：配对武器占对应位置，未配对的依次补位
+            var result = new List<WeaponDataSO>();
+            int remainingPtr = 0;
+            foreach (var m in matched)
+            {
+                if (m != null)
+                {
+                    result.Add(m);
+                }
+                else if (remainingPtr < remaining.Count)
+                {
+                    // 无配对武器，用剩余未匹配武器按顺序补位
+                    result.Add(remaining[remainingPtr++]);
+                }
+            }
+            // 剩余未匹配武器追加到末尾
+            while (remainingPtr < remaining.Count)
+            {
+                result.Add(remaining[remainingPtr++]);
+            }
+
+            Debug.Log($"[TankController] 武器配对完成: {selectedWeapons.Count}把 → {result.Count}把 (按名字配对)");
+            return result;
+        }
+
+        /// <summary>
+        /// 将武器数据安装到指定槽位
+        /// </summary>
+        private void InstallWeaponIntoSlot(WeaponSlot slot, WeaponDataSO weaponData)
+        {
+            // 通过 WeaponModelMapper 获取武器模型名称
+            string modelName = WeaponModelMapper.GetModelName(weaponData.WeaponCategory);
+            GameObject weaponPrefab = Resources.Load<GameObject>(WEAPONS_RESOURCE_PATH + modelName);
+
+            if (weaponPrefab == null)
+            {
+                Debug.LogWarning($"[TankController] 武器模型未找到: {modelName}，使用 blaster-a 回退");
+                weaponPrefab = Resources.Load<GameObject>(WEAPONS_RESOURCE_PATH + "blaster-a");
+            }
+
+            slot.InstallWeapon(weaponData.ToDataValue(), weaponPrefab);
+        }
+
+        /// <summary>
+        /// 创建单个默认机关炮槽位（无武器数据时使用）
+        /// </summary>
+        private void CreateSingleSlotWithDefaultWeapon(int index)
+        {
+            GameObject slotObj = new GameObject($"WeaponSlot_{index}");
+            slotObj.transform.SetParent(_weaponSlotsRoot, false);
+            slotObj.transform.localPosition = new Vector3(0, WEAPON_SLOT_HEIGHT, WEAPON_SLOT_RADIUS);
+            slotObj.transform.localRotation = Quaternion.identity;
+
+            var slot = slotObj.AddComponent<WeaponSlot>();
+            slot.SlotIndex = index;
+
+            // 加载默认武器（blaster-a）
+            var defaultPrefab = Resources.Load<GameObject>(WEAPONS_RESOURCE_PATH + "blaster-a");
+            var defaultData = new WeaponDataValue("default_blaster", "默认机关炮",
+                WeaponCategory.MachineGun, WeaponType.Gatling, 10f, 2f, 8f);
+            slot.InstallWeapon(defaultData, defaultPrefab);
+        }
+
+        /// <summary>
+        /// 构建 _weaponSlots 数组
+        /// </summary>
+        private void BuildWeaponSlotsArray()
+        {
+            if (_weaponSlotsRoot == null) return;
+            _weaponSlots = new Transform[_weaponSlotsRoot.childCount];
+            for (int i = 0; i < _weaponSlotsRoot.childCount; i++)
+            {
+                _weaponSlots[i] = _weaponSlotsRoot.GetChild(i);
             }
         }
 
@@ -244,8 +446,7 @@ namespace Game.Runtime.Controller
             {
                 _moveAction = _playerInput.actions["Move"];
             }
-            
-            // Fallback: Create simple input if PlayerInput not configured
+
             if (_moveAction == null)
             {
                 Debug.Log("TankController: Using fallback keyboard input");
@@ -276,16 +477,14 @@ namespace Game.Runtime.Controller
         {
             if (_moveInput.sqrMagnitude < 0.01f) return;
 
-            // 获取摄像机的前后左右方向（忽略Y轴）
             Vector3 cameraForward = _mainCamera != null ? _mainCamera.transform.forward : Vector3.forward;
             Vector3 cameraRight = _mainCamera != null ? _mainCamera.transform.right : Vector3.right;
-            
+
             cameraForward.y = 0;
             cameraRight.y = 0;
             cameraForward.Normalize();
             cameraRight.Normalize();
 
-            // W = 摄像机前方向, S = 反方向, D = 右方向, A = 反方向
             Vector3 moveDirection = (cameraForward * _moveInput.y + cameraRight * _moveInput.x).normalized;
             Debug.DrawRay(transform.position, moveDirection * 10, Color.green);
             Vector3 targetPosition = transform.position + moveDirection * _tankData.MoveSpeed * Time.fixedDeltaTime;

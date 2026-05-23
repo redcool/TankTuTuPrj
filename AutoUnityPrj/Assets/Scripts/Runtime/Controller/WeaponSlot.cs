@@ -31,7 +31,11 @@ namespace Game.Runtime.Controller
         public WeaponDataValue WeaponData => _weaponData;
         public bool HasWeapon => _weaponData != null;
         public Transform MuzzlePosition => _muzzlePosition != null ? _muzzlePosition : transform;
-        public int SlotIndex => _slotIndex;
+        public int SlotIndex
+        {
+            get => _slotIndex;
+            set => _slotIndex = value;
+        }
 
         /// <summary>
         /// 获取缓存的战车控制器（延迟初始化）
@@ -58,7 +62,7 @@ namespace Game.Runtime.Controller
             // 如果没配置SO，使用默认武器
             else if (_slotIndex == 0 && _defaultWeaponPrefab != null && !HasWeapon)
             {
-                var defaultData = new WeaponDataValue("default_blaster", "默认机关炮", WeaponType.Gatling, 10f, 2f, 8f);
+                var defaultData = new WeaponDataValue("default_blaster", "默认机关炮", WeaponCategory.MachineGun, WeaponType.Gatling, 10f, 2f, 8f);
                 InstallWeapon(defaultData, _defaultWeaponPrefab);
             }
         }
@@ -66,12 +70,18 @@ namespace Game.Runtime.Controller
         private void Update()
         {
             if (!HasWeapon) return;
-            if (!_weaponData.CanAttack()) return;
 
             FindTarget();
             if (_currentTarget != null)
             {
-                AimAndShoot();
+                // 持续对准目标（不受攻击CD影响）
+                RotateTowardTarget();
+                // CD到了且已对准 → 射击
+                if (_weaponData.CanAttack() && IsAimedAtTarget())
+                {
+                    _weaponData.ExecuteAttack();
+                    SpawnProjectile();
+                }
             }
         }
 
@@ -122,29 +132,21 @@ namespace Game.Runtime.Controller
             }
         }
 
-        private void AimAndShoot()
+        /// <summary>
+        /// 持续旋转武器槽对准目标（不受攻击CD影响）
+        /// </summary>
+        private void RotateTowardTarget()
         {
-            // 瞄准目标
+            if (_currentTarget == null) return;
+
             Vector3 direction = (_currentTarget.position - transform.position);
             direction.y = 0;
 
-            // 如果距离极近（怪物重合），直接朝向怪物并射击
-            if (direction.sqrMagnitude < 0.1f)
-            {
-                _weaponData.ExecuteAttack();
-                SpawnProjectile();
-                return;
-            }
+            if (direction.sqrMagnitude < 0.01f) return;
 
             direction.Normalize();
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 15f * Time.deltaTime);
-
-            // 检查是否对准目标（点乘 > 阈值）
-            if (!IsAimedAtTarget()) return;
-
-            _weaponData.ExecuteAttack();
-            SpawnProjectile();
         }
 
         /// <summary>
@@ -182,7 +184,7 @@ namespace Game.Runtime.Controller
         {
             if (_currentTarget == null) return;
 
-            // 子弹发射方向 = 战车的向前方向
+            // 子弹发射方向 = 武器槽的向前方向（由 RotateTowardTarget 持续对准目标）
             Vector3 fireDirection = transform.forward;
             fireDirection.y = 0;
             if (fireDirection.sqrMagnitude < 0.01f) return;
@@ -194,6 +196,7 @@ namespace Game.Runtime.Controller
             int damage = Mathf.RoundToInt(_weaponData.GetFinalDamage(tankData));
 
             // 使用Projectile统一控制器
+            // 子弹直线前进，不追踪；碰撞到任何物体（敌人/障碍物）即爆炸
             if (_bulletPrefab != null)
             {
                 ProjectileFactory.CreateFromPrefab(

@@ -1,0 +1,139 @@
+.common-btn {
+    transition-duration: 0s;
+    background-color: rgba(45, 92, 36, 0.6);
+    transition-property: all;
+    min-width: 300px;
+    min-height: 52px;
+}
+
+.common-btn:hover {
+    width: 200px;
+    scale: 1.1 1.1;
+    background-color: rgba(212, 45, 55, 0.38);
+}
+
+.menu-root {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(13, 13, 13);
+    background-image: url("project://database/Assets/Arts/UI/Backgrounds/MenuBackground.png?fileID=2800000&guid=34560a19348845819ccf57a1dcb46eed&type=3#MenuBackground");
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-bg-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.menu-title-area {
+    align-items: center;
+    margin-bottom: 48px;
+    margin-top: -80px;
+}
+
+.menu-title {
+    font-size: 64px;
+    color: rgb(232, 232, 232);
+    letter-spacing: 12px;
+    -unity-text-align: middle-center;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 16px rgba(74, 124, 63, 0.4);
+}
+
+.menu-subtitle {
+    font-size: 18px;
+    color: var(--color-text-secondary);
+    letter-spacing: 16px;
+    -unity-text-align: middle-center;
+    opacity: 0.6;
+}
+
+.menu-buttons {
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-continue {
+    font-size: 20px;
+    min-width: 300px;
+    min-height: 52px;
+    padding: 0;
+    border-width: 1px;
+    border-color: var(--color-primary-light);
+    border-radius: 4px;
+    background-color: rgba(74, 124, 63, 0.2);
+    color: rgb(255, 255, 255);
+    letter-spacing: 6px;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.btn-continue:hover {
+    background-color: rgba(74, 124, 63, 0.45);
+    border-color: var(--color-primary-light);
+}
+
+.btn-continue:active {
+    background-color: rgba(45, 92, 36, 0.6);
+    border-color: var(--color-primary);
+}
+
+.menu-btn-separator {
+    height: 12px;
+    width: 100%;
+}
+
+.btn-start-menu {
+    font-size: 20px;
+    min-width: 300px;
+    min-height: 48px;
+    padding: 0;
+    border-width: 0;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: rgb(204, 204, 204);
+    letter-spacing: 8px;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.btn-start-menu:hover {
+    background-color: rgba(74, 124, 63, 0.45);
+    color: rgb(255, 255, 255);
+    scale: 1.1 1.1;
+}
+
+.btn-start-menu-pressed {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: rgb(255, 255, 255);
+}
+
+.btn-start-menu-quit {
+    margin-top: 24px;
+    border-width: 0;
+}
+
+.btn-start-menu-quit:hover {
+    color: rgba(200, 200, 200, 0.8);
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.menu-footer {
+    position: absolute;
+    bottom: 24px;
+    left: 0;
+    right: 0;
+    align-items: center;
+}
+
+.menu-version {
+    font-size: 11px;
+    color: rgba(96, 96, 96, 0.5);
+    letter-spacing: 2px;
+}

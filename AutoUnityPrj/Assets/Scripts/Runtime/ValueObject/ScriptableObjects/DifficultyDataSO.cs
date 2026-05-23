@@ -86,6 +86,12 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         public bool HasEliteEnemies => _hasEliteEnemies;
         public bool HasBoss => _hasBoss;
 
+        // UI 显示用属性（Presenter 中使用）
+        public int StarRating => _difficultyLevel + 1;
+        public float EnemyHealthMultiplier => _enemyHpMultiplier;
+        public float EnemySpawnRateMultiplier => _spawnIntervalMultiplier;
+        public float ResourceMultiplier => _dropRateMultiplier;
+
         #endregion
 
         /// <summary>

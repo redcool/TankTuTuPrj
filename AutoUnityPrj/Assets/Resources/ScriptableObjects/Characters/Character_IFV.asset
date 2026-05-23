@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7497ad52d2f594a834baf60b117faa, type: 3}
+  m_Name: Character_IFV
+  m_EditorClassIdentifier:
+  _characterId: ifv
+  _characterName: 步兵战车
+  _vehicleType: 2
+  _icon: {fileID: 0}
+  _description: 全能型战车，各项属性均衡。适合新手熟悉游戏机制�?
+  _maxHealth: 110
+  _healthRegen: 0.5
+  _lifesteal: 0.02
+  _percentDamage: 0
+  _rangedDamage: 0
+  _meleeDamage: 0
+  _elementDamage: 0
+  _engineering: 0
+  _attackSpeed: 1.1
+  _critRate: 8
+  _range: 11
+  _aimAccuracy: 0.85
+  _armor: 2
+  _dodge: 8
+  _moveSpeed: 3.5
+  _luck: 5
+  _harvest: 1.1
+  _maxHpMod: 0
+  _speedModPercent: 0
+  _attackSpeedModPercent: 0
+  _critChanceMod: 0
+  _armorMod: 0
+  _rangeModPercent: 0
+  _dodgeMod: 0
+  _luckMod: 0
+  _harvestMod: 0
+  _startingWeaponPaths:
+  - ScriptableObjects/Weapons/Weapon_MainCannon_StandardCannon
+  _isUnlocked: 1
+  _unlockCondition: 
+  _unlockRequirement: 0
+  _specialAbility: 全能：所有属性额�?5%
+  _specialAbilityType: all_rounder 

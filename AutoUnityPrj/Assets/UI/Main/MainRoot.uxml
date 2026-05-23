@@ -1,0 +1,230 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Common/Common.uss?fileID=7433441132597879392&amp;guid=605459945de33ec48b895e5a80fb5f0d&amp;type=3#Common" />
+    <Style src="project://database/Assets/UI/StartMenu/StartMenu.uss?fileID=7433441132597879392&amp;guid=fe30485fd2d4eb946b2268358bcad95a&amp;type=3#StartMenu" />
+    <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelect.uss?fileID=7433441132597879392&amp;guid=d52e71fa542a454458c0437ab4fa7281&amp;type=3#CharacterSelect" />
+    <Style src="project://database/Assets/UI/CharacterSelect/CharacterCard.uss?fileID=7433441132597879392&amp;guid=c9762e2c535a6ec42afecac8ce2da33d&amp;type=3#CharacterCard" />
+    <Style src="project://database/Assets/UI/WeaponSelect/WeaponSelect.uss?fileID=7433441132597879392&amp;guid=9b7b5a1b69a6eb84c81e3d5e4ab0a67b&amp;type=3#WeaponSelect" />
+    <Style src="project://database/Assets/UI/WeaponSelect/WeaponCard.uss?fileID=7433441132597879392&amp;guid=24d6295a732e8c8448d35af5a1a343c1&amp;type=3#WeaponCard" />
+    <Style src="project://database/Assets/UI/DifficultySelect/DifficultySelect.uss?fileID=7433441132597879392&amp;guid=b3f38fd5bc575234f8d7d3591907ce4c&amp;type=3#DifficultySelect" />
+    <Style src="project://database/Assets/UI/HUD/BattleHud.uss" />
+    <ui:VisualElement name="panel-start-menu" class="panel-dark menu-root">
+        <ui:VisualElement class="menu-bg-overlay" />
+        <ui:VisualElement class="menu-title-area">
+            <ui:Label text="坦克突突" class="menu-title" />
+            <ui:Label text="TANK TUTU" class="menu-subtitle" />
+        </ui:VisualElement>
+        <ui:VisualElement name="menu-buttons" class="menu-buttons">
+            <ui:Button text="继 续 战 斗" name="btn-continue" class="btn-continue" />
+            <ui:VisualElement name="continue-separator" class="menu-btn-separator" />
+            <ui:Button text="新 游 戏" name="btn-new-game" class="btn-start-menu" />
+            <ui:Button text="设 置" name="btn-settings" class="btn-start-menu" />
+            <ui:Button text="退 出" name="btn-quit" class="btn-start-menu btn-start-menu-quit" />
+        </ui:VisualElement>
+        <ui:VisualElement class="menu-footer">
+            <ui:Label text="v1.0.0 — 2026" class="menu-version" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="panel-character-select" class="panel-dark cs-root" style="display: none;">
+        <ui:VisualElement class="cs-header">
+            <ui:Button text="← 返回" name="btn-back" class="btn btn-secondary btn-small cs-back-btn" />
+            <ui:Label text="选择战车" class="heading-xl cs-title" />
+            <ui:VisualElement class="cs-header-spacer" />
+        </ui:VisualElement>
+        <ui:VisualElement class="cs-main">
+            <ui:ScrollView class="cs-card-grid-scroll">
+                <ui:VisualElement name="card-grid" class="cs-card-grid" />
+            </ui:ScrollView>
+            <ui:VisualElement name="detail-panel" class="cs-detail-panel">
+                <ui:VisualElement class="cs-detail-header">
+                    <ui:Label text="战车详情" name="detail-title" class="heading-md" />
+                    <ui:Label name="detail-vehicle-tag" class="tag" />
+                </ui:VisualElement>
+                <ui:VisualElement class="divider" />
+                <ui:VisualElement name="detail-stats" class="cs-detail-stats">
+                    <ui:Label text="选择一辆战车查看详情" name="detail-placeholder" class="text-secondary" />
+                </ui:VisualElement>
+                <ui:VisualElement name="detail-ability" class="cs-detail-ability">
+                    <ui:Label name="detail-ability-title" class="heading-md" />
+                    <ui:Label name="detail-ability-desc" class="text-body" />
+                </ui:VisualElement>
+                <ui:VisualElement name="detail-weapon" class="cs-detail-weapon">
+                    <ui:Label name="detail-weapon-label" class="text-secondary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="cs-footer">
+            <ui:Button text="确 定" name="btn-confirm" class="btn btn-primary" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="panel-weapon-select" class="panel-dark ws-root" style="display: none;">
+        <ui:VisualElement class="ws-header">
+            <ui:Button text="← 返回" name="btn-back" class="btn btn-secondary btn-small" />
+            <ui:Label text="选择武器" class="heading-xl ws-title" />
+        </ui:VisualElement>
+        <ui:VisualElement class="ws-main">
+            <ui:ScrollView class="ws-card-grid-scroll">
+                <ui:VisualElement name="card-grid" class="ws-card-grid" />
+            </ui:ScrollView>
+            <ui:VisualElement name="detail-panel" class="ws-detail-panel">
+                <ui:Label text="选择一件武器" name="detail-title" class="heading-md" />
+                <ui:Label name="detail-rarity" class="text-secondary" />
+                <ui:Label name="detail-desc" class="text-body" />
+                <ui:VisualElement class="divider" />
+                <ui:VisualElement name="detail-stats" class="ws-detail-stats" />
+                <ui:VisualElement name="detail-special" class="ws-detail-special" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="ws-footer">
+            <ui:Button text="确 定" name="btn-confirm" class="btn btn-primary" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="panel-difficulty-select" class="panel-dark ds-root" style="display: none;">
+        <ui:VisualElement class="ds-header">
+            <ui:Button text="← 返回" name="btn-back" class="btn btn-secondary btn-small" />
+            <ui:Label text="选择难度" class="heading-xl ds-title" />
+        </ui:VisualElement>
+        <ui:VisualElement name="card-area" class="ds-card-area">
+            <ui:VisualElement name="card-row" class="ds-card-row" />
+        </ui:VisualElement>
+        <ui:VisualElement name="detail-area" class="ds-detail-area">
+            <ui:Label text="选择一个难度" name="detail-name" class="heading-md" />
+            <ui:Label name="detail-desc" class="text-secondary" />
+            <ui:VisualElement class="divider" />
+            <ui:VisualElement name="detail-mods" class="ds-detail-mods" />
+        </ui:VisualElement>
+        <ui:VisualElement class="ds-footer">
+            <ui:Button text="开 始 战 斗 ▸" name="btn-start" class="btn btn-primary ds-start-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- ════════════════════════════════════════ -->
+    <!--  战斗 HUD — 四人分居四角              -->
+    <!-- ════════════════════════════════════════ -->
+    <ui:VisualElement name="panel-battle-hud" style="display: none;">
+
+        <!-- ── Player 1 (左上) ── -->
+        <ui:VisualElement name="player-1-panel" class="player-panel player-panel-top-left">
+            <ui:VisualElement class="player-header-row">
+                <ui:VisualElement name="p1-avatar" class="player-avatar" />
+                <ui:Label name="p1-name" class="player-name" text="玩家 1" />
+            </ui:VisualElement>
+            <ui:Label name="p1-hp-value" class="hp-value" text="100 / 100" />
+            <ui:VisualElement name="p1-hp-bar-bg" class="hp-bar-bg">
+                <ui:VisualElement name="p1-hp-bar" class="hp-bar-fill" style="width: 100%;" />
+            </ui:VisualElement>
+            <ui:Label name="p1-exp-value" class="exp-value" text="EXP: 0 / 100" />
+            <ui:VisualElement name="p1-exp-bar-bg" class="exp-bar-bg">
+                <ui:VisualElement name="p1-exp-bar" class="exp-bar-fill" style="width: 0%;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="p1-level-icons" class="level-icons-container" />
+            <ui:VisualElement name="p1-chest-container" class="chest-section">
+                <ui:VisualElement name="p1-chest-lv1" class="chest-row">
+                    <ui:VisualElement name="p1-chest-lv1-icon" class="chest-icon" />
+                    <ui:Label name="p1-chest-lv1-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p1-chest-lv2" class="chest-row">
+                    <ui:VisualElement name="p1-chest-lv2-icon" class="chest-icon" />
+                    <ui:Label name="p1-chest-lv2-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p1-chest-lv3" class="chest-row">
+                    <ui:VisualElement name="p1-chest-lv3-icon" class="chest-icon" />
+                    <ui:Label name="p1-chest-lv3-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── Player 2 (右上) ── -->
+        <ui:VisualElement name="player-2-panel" class="player-panel player-panel-top-right">
+            <ui:VisualElement class="player-header-row">
+                <ui:VisualElement name="p2-avatar" class="player-avatar" />
+                <ui:Label name="p2-name" class="player-name" text="玩家 2" />
+            </ui:VisualElement>
+            <ui:Label name="p2-hp-value" class="hp-value" text="100 / 100" />
+            <ui:VisualElement name="p2-hp-bar-bg" class="hp-bar-bg">
+                <ui:VisualElement name="p2-hp-bar" class="hp-bar-fill" style="width: 100%;" />
+            </ui:VisualElement>
+            <ui:Label name="p2-exp-value" class="exp-value" text="EXP: 0 / 100" />
+            <ui:VisualElement name="p2-exp-bar-bg" class="exp-bar-bg">
+                <ui:VisualElement name="p2-exp-bar" class="exp-bar-fill" style="width: 0%;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="p2-level-icons" class="level-icons-container" />
+            <ui:VisualElement name="p2-chest-container" class="chest-section">
+                <ui:VisualElement name="p2-chest-lv1" class="chest-row">
+                    <ui:VisualElement name="p2-chest-lv1-icon" class="chest-icon" />
+                    <ui:Label name="p2-chest-lv1-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p2-chest-lv2" class="chest-row">
+                    <ui:VisualElement name="p2-chest-lv2-icon" class="chest-icon" />
+                    <ui:Label name="p2-chest-lv2-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p2-chest-lv3" class="chest-row">
+                    <ui:VisualElement name="p2-chest-lv3-icon" class="chest-icon" />
+                    <ui:Label name="p2-chest-lv3-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── Player 3 (左下) ── -->
+        <ui:VisualElement name="player-3-panel" class="player-panel player-panel-bottom-left">
+            <ui:VisualElement class="player-header-row">
+                <ui:VisualElement name="p3-avatar" class="player-avatar" />
+                <ui:Label name="p3-name" class="player-name" text="玩家 3" />
+            </ui:VisualElement>
+            <ui:Label name="p3-hp-value" class="hp-value" text="100 / 100" />
+            <ui:VisualElement name="p3-hp-bar-bg" class="hp-bar-bg">
+                <ui:VisualElement name="p3-hp-bar" class="hp-bar-fill" style="width: 100%;" />
+            </ui:VisualElement>
+            <ui:Label name="p3-exp-value" class="exp-value" text="EXP: 0 / 100" />
+            <ui:VisualElement name="p3-exp-bar-bg" class="exp-bar-bg">
+                <ui:VisualElement name="p3-exp-bar" class="exp-bar-fill" style="width: 0%;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="p3-level-icons" class="level-icons-container" />
+            <ui:VisualElement name="p3-chest-container" class="chest-section">
+                <ui:VisualElement name="p3-chest-lv1" class="chest-row">
+                    <ui:VisualElement name="p3-chest-lv1-icon" class="chest-icon" />
+                    <ui:Label name="p3-chest-lv1-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p3-chest-lv2" class="chest-row">
+                    <ui:VisualElement name="p3-chest-lv2-icon" class="chest-icon" />
+                    <ui:Label name="p3-chest-lv2-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p3-chest-lv3" class="chest-row">
+                    <ui:VisualElement name="p3-chest-lv3-icon" class="chest-icon" />
+                    <ui:Label name="p3-chest-lv3-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── Player 4 (右下) ── -->
+        <ui:VisualElement name="player-4-panel" class="player-panel player-panel-bottom-right">
+            <ui:VisualElement class="player-header-row">
+                <ui:VisualElement name="p4-avatar" class="player-avatar" />
+                <ui:Label name="p4-name" class="player-name" text="玩家 4" />
+            </ui:VisualElement>
+            <ui:Label name="p4-hp-value" class="hp-value" text="100 / 100" />
+            <ui:VisualElement name="p4-hp-bar-bg" class="hp-bar-bg">
+                <ui:VisualElement name="p4-hp-bar" class="hp-bar-fill" style="width: 100%;" />
+            </ui:VisualElement>
+            <ui:Label name="p4-exp-value" class="exp-value" text="EXP: 0 / 100" />
+            <ui:VisualElement name="p4-exp-bar-bg" class="exp-bar-bg">
+                <ui:VisualElement name="p4-exp-bar" class="exp-bar-fill" style="width: 0%;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="p4-level-icons" class="level-icons-container" />
+            <ui:VisualElement name="p4-chest-container" class="chest-section">
+                <ui:VisualElement name="p4-chest-lv1" class="chest-row">
+                    <ui:VisualElement name="p4-chest-lv1-icon" class="chest-icon" />
+                    <ui:Label name="p4-chest-lv1-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p4-chest-lv2" class="chest-row">
+                    <ui:VisualElement name="p4-chest-lv2-icon" class="chest-icon" />
+                    <ui:Label name="p4-chest-lv2-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+                <ui:VisualElement name="p4-chest-lv3" class="chest-row">
+                    <ui:VisualElement name="p4-chest-lv3-icon" class="chest-icon" />
+                    <ui:Label name="p4-chest-lv3-count" class="chest-count" text="×0" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

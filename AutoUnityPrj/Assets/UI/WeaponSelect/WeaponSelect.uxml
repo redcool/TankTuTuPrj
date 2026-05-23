@@ -1,0 +1,45 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="project://database/Assets/UI/Common/Common.uss" />
+    <ui:Style src="project://database/Assets/UI/WeaponSelect/WeaponSelect.uss" />
+    
+    <ui:VisualElement class="panel-dark ws-root">
+        <!-- 顶部: 标题 + 返回 -->
+        <ui:VisualElement class="ws-header">
+            <ui:Button text="← 返回" class="btn btn-secondary btn-small" name="btn-back" />
+            <ui:Label text="选择武器" class="heading-xl ws-title" />
+        </ui:VisualElement>
+
+        <!-- 分类标签栏 -->
+        <ui:VisualElement class="ws-tab-bar" name="tab-bar">
+            <ui:Button text="主炮" class="btn btn-small ws-tab ws-tab-active" name="tab-mc" />
+            <ui:Button text="机枪" class="btn btn-small ws-tab" name="tab-mg" />
+            <ui:Button text="导弹" class="btn btn-small ws-tab" name="tab-ms" />
+            <ui:Button text="喷射" class="btn btn-small ws-tab" name="tab-sp" />
+            <ui:Button text="近战" class="btn btn-small ws-tab" name="tab-ml" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="ws-main">
+            <!-- 武器卡片网格 -->
+            <ui:ScrollView class="ws-card-grid-scroll">
+                <ui:VisualElement class="ws-card-grid" name="card-grid">
+                    <!-- 由 Presenter 动态创建 -->
+                </ui:VisualElement>
+            </ui:ScrollView>
+
+            <!-- 右侧详情 -->
+            <ui:VisualElement class="ws-detail-panel" name="detail-panel">
+                <ui:Label text="选择一件武器" class="heading-md" name="detail-title" />
+                <ui:Label text="" class="text-secondary" name="detail-rarity" />
+                <ui:Label text="" class="text-body" name="detail-desc" />
+                <ui:VisualElement class="divider" />
+                <ui:VisualElement class="ws-detail-stats" name="detail-stats" />
+                <ui:VisualElement class="ws-detail-special" name="detail-special" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- 底部确定 -->
+        <ui:VisualElement class="ws-footer">
+            <ui:Button text="确 定" class="btn btn-primary" name="btn-confirm" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

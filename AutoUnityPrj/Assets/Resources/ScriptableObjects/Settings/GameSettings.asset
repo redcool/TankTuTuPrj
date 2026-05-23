@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae52e517c8558c748b37832af486859b, type: 3}
+  m_Name: GameSettings
+  m_EditorClassIdentifier: 
+  _masterVolume: 0.8
+  _musicVolume: 0.7
+  _sfxVolume: 1
+  _muteAll: 0
+  _qualityLevel: 2
+  _fullscreen: 1
+  _resolutionIndex: 0
+  _vSync: 1
+  _language: zh-CN
+  _cameraShake: 1
+  _showDamageNumbers: 1
+  _autoCollectRange: 3
+  _invertY: 0
+  _sensitivityX: 1
+  _sensitivityY: 1

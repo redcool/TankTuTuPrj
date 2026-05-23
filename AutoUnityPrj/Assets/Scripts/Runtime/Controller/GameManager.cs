@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Game.Runtime.ValueObject.ScriptableObjects;
 
 namespace Game.Runtime.Controller
 {
@@ -7,7 +8,50 @@ namespace Game.Runtime.Controller
     {
         public static GameManager Instance { get; private set; }
 
+        [Header("玩家设置")]
         [SerializeField] private int _playerCount = 1;
+
+        /// <summary>
+        /// 当前选择的角色 ID（跨场景传递）
+        /// CharacterSelectPresenter 在确认时写入
+        /// TankController 在战斗场景读取
+        /// </summary>
+        public string SelectedCharacterId { get; set; } = "";
+
+        /// <summary>
+        /// 缓存当前角色的完整数据（可通过 Resources.Load 重新获取）
+        /// </summary>
+        public CharacterDataSO SelectedCharacterData { get; set; }
+
+        /// <summary>
+        /// 当前选择的武器 ID（跨场景传递）
+        /// </summary>
+        public string SelectedWeaponId { get; set; } = "";
+
+        /// <summary>
+        /// 缓存当前武器的完整数据
+        /// </summary>
+        public WeaponDataSO SelectedWeaponData { get; set; }
+
+        /// <summary>
+        /// 多武器支持 - 已选择的武器列表（跨场景传递）
+        /// </summary>
+        public List<WeaponDataSO> SelectedWeaponDatas { get; set; } = new List<WeaponDataSO>();
+
+        /// <summary>
+        /// 多武器支持 - 已选择的武器 ID 列表
+        /// </summary>
+        public List<string> SelectedWeaponIdList { get; set; } = new List<string>();
+
+        /// <summary>
+        /// 当前选择的难度等级
+        /// </summary>
+        public int SelectedDifficultyLevel { get; set; } = 0;
+
+        /// <summary>
+        /// 缓存当前难度的完整数据
+        /// </summary>
+        public DifficultyDataSO SelectedDifficultyData { get; set; }
 
         private Dictionary<int, int> _playerResources = new Dictionary<int, int>();
 
@@ -161,14 +205,14 @@ namespace Game.Runtime.Controller
         }
 
         /// <summary>
-        /// 更新HUD资源显示
+        /// 更新HUD资源显示（旧版uGUI HUDView→通过LevelManager事件广播）
         /// </summary>
         public void UpdateHUDResource(int playerIndex)
         {
-            var hud = FindObjectOfType<Game.Runtime.View.HUDView>();
-            if (hud != null)
+            var lm = FindObjectOfType<LevelManager>();
+            if (lm != null)
             {
-                hud.UpdateResource(GetResource(playerIndex));
+                lm.NotifyHUDResourceUpdate(GetResource(playerIndex));
             }
         }
     }

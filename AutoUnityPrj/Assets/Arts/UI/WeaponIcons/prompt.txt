@@ -1,0 +1,120 @@
+武器图标生成提示词模板
+
+通用模板：
+  武器描述, 俯视角, 白色背景, 游戏图标,
+  金属质感, 写实风格, 高保真材质, PBR渲染,
+  studio lighting, clean white background, game asset icon
+
+各武器提示词：
+
+1. StandardCannon.png - 标准火炮
+   "A standard military cannon barrel, top-down view,
+   white background, steel metal, realistic PBR render,
+   game icon, studio lighting"
+
+2. LightCannon.png - 轻型火炮
+   "A small light cannon, top-down view, white background,
+   light steel construction, compact barrel, game icon,
+   realistic PBR render"
+
+3. HeavyCannon.png - 重型火炮
+   "A large heavy cannon, top-down view, white background,
+   thick steel barrel, reinforced breech, heavy duty,
+   game icon, realistic PBR render"
+
+4. QuickFireCannon.png - 速射炮
+   "A rapid-fire cannon, top-down view, white background,
+   lightweight cannon with recoil mechanism,
+   multiple cooling vents along barrel, fast-firing design,
+   steel construction, realistic PBR render, game icon, studio lighting"
+
+5. BunkerBuster.png - 攻城炮
+   "A massive bunker buster siege cannon, top-down view,
+   white background, extremely long and thick barrel,
+   heavy breach mechanism, reinforced structure,
+   demolition weapon, realistic PBR render, game icon, studio lighting"
+
+6. Gatling.png - 加特林
+   "A Gatling gun with rotating barrels, top-down view,
+   white background, multiple barrels, black steel,
+   realistic PBR render, game icon"
+
+7. LightMG.png - 轻机枪
+   "A light machine gun, top-down view, white background,
+   slim barrel with heat shield, box magazine, bipod,
+   compact automatic weapon, black steel,
+   realistic PBR render, game icon, studio lighting"
+
+8. HeavyMG.png - 重机枪
+   "A heavy machine gun, top-down view, white background,
+   thick barrel with perforated cooling jacket,
+   large ammunition feed belt, heavy duty mounts,
+   dark steel, realistic PBR render, game icon, studio lighting"
+
+9. EMG.png - 电磁机枪
+   "An electromagnetic machine gun, top-down view,
+   white background, sci-fi energy weapon, coil barrel,
+   blue energy accents, realistic PBR render, game icon"
+
+10. ATGM.png - 反坦克导弹
+    "An anti-tank guided missile, top-down view,
+    white background, missile tube with fins,
+    green metallic, realistic PBR render, game icon"
+
+11. Rocket.png - 火箭弹
+    "A rocket launcher, top-down view, white background,
+    multiple rocket tubes, military green,
+    realistic PBR render, game icon"
+
+12. GuidedMissile.png - 制导导弹
+    "A guided cruise missile, top-down view, white background,
+    sleek aerodynamic body, wings and tail fins,
+    seeker head, advanced white metallic casing,
+    realistic PBR render, game icon, studio lighting"
+
+13. FlameSprayer.png - 火焰喷射器
+    "A flamethrower weapon, top-down view, white background,
+    fuel tank, nozzle, red and black metal,
+    realistic PBR render, game icon"
+
+14. CryoSprayer.png - 冷冻喷射器
+    "A cryogenic freeze sprayer, top-down view, white background,
+    industrial pressure tank with pressure gauge,
+    cryo nozzle, blue metallic with frost details,
+    pipes and valves, realistic PBR render, game icon, studio lighting"
+
+15. WaterCannon.png - 高压水炮
+    "A high-pressure water cannon, top-down view, white background,
+    large water tank, powerful nozzle, industrial grade,
+    blue and steel construction,
+    realistic PBR render, game icon, studio lighting"
+
+16. AcidSprayer.png - 酸液喷射器
+    "An acid sprayer weapon, top-down view, white background,
+    chemical tank with hazard warning symbols,
+    corrosion-resistant nozzle, green toxic accents,
+    industrial equipment, realistic PBR render, game icon, studio lighting"
+
+17. Chainsaw.png - 链锯
+    "A chainsaw melee weapon, top-down view, white background,
+    sharp chain teeth, motor housing, silver and orange,
+    realistic PBR render, game icon"
+
+18. Drill.png - 钻头
+    "A heavy-duty drill melee weapon, top-down view, white background,
+    large spiral drill bit, motor housing,
+    industrial steel construction, gray and orange,
+    realistic PBR render, game icon, studio lighting"
+
+生成参数：
+  模型: z_image_turbo_bf16.safetensors (diffusion_models)
+  CLIP: qwen_3_4b.safetensors (type: qwen_image)
+  VAE: ae.safetensors
+  尺寸: 1024×1024
+  步数: 4
+  CFG: 1.0
+  采样器: euler
+  调度器: simple
+  ModelSamplingAuraFlow shift: 3.0
+
+状态: 全部 18 种武器图标已完成 ✓

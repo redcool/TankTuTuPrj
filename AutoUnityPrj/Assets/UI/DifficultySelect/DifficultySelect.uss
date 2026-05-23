@@ -1,0 +1,130 @@
+/* DifficultySelect.uss — 难度选择界面样式 */
+/* 6 张卡片水平铺满全屏，无滚动条，256×256 图标 */
+
+.ds-root {
+    flex-grow: 1;
+    padding: 24px;
+    align-items: center;
+}
+
+.ds-header {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.ds-title {
+    flex-grow: 1;
+    margin-left: 16px;
+}
+
+/* 卡片区域 - 无滚动条 */
+.ds-card-area {
+    width: 100%;
+    flex-grow: 1;
+    margin-bottom: 24px;
+    max-height: 420px;
+}
+
+.ds-card-row {
+    flex-direction: row;
+    gap: 16px;
+    padding: 8px;
+    height: 100%;
+    justify-content: space-evenly;
+    flex-grow: 1;
+}
+
+/* 单张难度卡片 */
+.ds-card {
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 200px;
+    max-width: 300px;
+    background-color: var(--color-bg-card);
+    border-color: var(--color-border);
+    border-width: 1px;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.ds-card:hover {
+    background-color: var(--color-bg-card-hover);
+    border-color: var(--color-accent);
+}
+
+.ds-card.selected {
+    border-color: var(--color-accent);
+    border-width: 2px;
+    background-color: rgba(200, 168, 78, 0.12);
+}
+
+/* 难度图标 */
+.ds-card-icon {
+    width: 256px;
+    height: 256px;
+    margin-bottom: 8px;
+}
+
+.ds-card-name {
+    font-size: var(--text-xl);
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.ds-card-stars {
+    font-size: var(--text-lg);
+    color: var(--color-gold);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+}
+
+/* 倍率数据 */
+.ds-card-stats {
+    font-size: 11px;
+    color: #a0a0a0;
+    text-align: center;
+    white-space: normal;
+    margin-top: 4px;
+}
+
+/* 详情区域 */
+.ds-detail-area {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--color-bg-panel);
+    border-color: var(--color-border);
+    border-width: 1px;
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: 24px;
+}
+
+.ds-detail-mods {
+    margin-top: 8px;
+}
+
+.ds-detail-mod-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+/* 底部 */
+.ds-footer {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.ds-start-btn {
+    width: 280px;
+    height: 50px;
+    font-size: var(--text-xl);
+}

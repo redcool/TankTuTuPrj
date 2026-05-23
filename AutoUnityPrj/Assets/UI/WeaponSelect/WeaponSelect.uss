@@ -1,0 +1,89 @@
+/* WeaponSelect.uss — 武器选择界面样式 */
+
+.ws-root {
+    flex-grow: 1;
+    padding: 16px;
+}
+
+.ws-header {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.ws-title {
+    margin-left: 16px;
+    flex-grow: 1;
+}
+
+/* 分类标签栏 */
+.ws-tab-bar {
+    flex-direction: row;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border);
+}
+
+.ws-tab {
+    min-width: 80px;
+    text-align: center;
+}
+
+.ws-tab-active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-light);
+    color: white;
+}
+
+/* 主要内容区 */
+.ws-main {
+    flex-direction: row;
+    flex-grow: 1;
+    gap: 16px;
+    overflow: auto;
+}
+
+/* 卡片网格 */
+.ws-card-grid-scroll {
+    flex-grow: 1;
+    min-width: 500px;
+}
+
+.ws-card-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 详情面板 */
+.ws-detail-panel {
+    width: 300px;
+    min-width: 260px;
+    background-color: var(--color-bg-panel);
+    border-color: var(--color-border);
+    border-width: 1px;
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    flex-shrink: 0;
+}
+
+.ws-detail-stats {
+    margin: 8px 0;
+}
+
+.ws-detail-special {
+    margin: 8px 0;
+}
+
+/* 底部 */
+.ws-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top-width: 1px;
+    border-top-color: var(--color-border);
+    flex-shrink: 0;
+}

@@ -17,7 +17,10 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         [SerializeField] private Sprite _icon;
         [TextArea(2, 4)]
         [SerializeField] private string _description = "";
+        [SerializeField] private WeaponCategory _weaponCategory = WeaponCategory.MainCannon;
         [SerializeField] private WeaponType _weaponType = WeaponType.MainCannon;
+        [SerializeField] private DamageType _damageType = DamageType.PHYSICAL;
+        [SerializeField] private WeaponRarity _rarity = WeaponRarity.COMMON;
 
         [Header("基础属性")]
         [SerializeField] private float _damage = 10f;
@@ -30,10 +33,14 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         [SerializeField] private float _pierce = 1f;
         [SerializeField] private float _area = 0f;
         [SerializeField] private float _duration = 0f;
+        [SerializeField] private float _projectileSpeed = 10f;
+        [SerializeField] private int _projectileCount = 1;
+        [SerializeField] private float _knockback = 0f;
 
         [Header("商业属性")]
         [SerializeField] private int _price = 100;
         [SerializeField] private int _upgradeCost = 100;
+        [SerializeField] private float _upgradeDamagePerLevel = 0.15f;
         [SerializeField] private bool _isDefault = false;
 
         #region Properties
@@ -47,7 +54,10 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
             set => _icon = value;
         }
         public string Description => _description;
+        public WeaponCategory WeaponCategory => _weaponCategory;
         public WeaponType WeaponType => _weaponType;
+        public DamageType DamageType => _damageType;
+        public WeaponRarity Rarity => _rarity;
         public float Damage => _damage;
         public float AttackSpeed => _attackSpeed;
         public float Range => _range;
@@ -56,8 +66,12 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         public float Pierce => _pierce;
         public float Area => _area;
         public float Duration => _duration;
+        public float ProjectileSpeed => _projectileSpeed;
+        public int ProjectileCount => _projectileCount;
+        public float Knockback => _knockback;
         public int Price => _price;
         public int UpgradeCost => _upgradeCost;
+        public float UpgradeDamagePerLevel => _upgradeDamagePerLevel;
         public bool IsDefault => _isDefault;
 
         public int PriceSetter
@@ -70,6 +84,24 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         {
             get => _isDefault;
             set => _isDefault = value;
+        }
+
+        public WeaponCategory WeaponCategorySetter
+        {
+            get => _weaponCategory;
+            set => _weaponCategory = value;
+        }
+
+        public DamageType DamageTypeSetter
+        {
+            get => _damageType;
+            set => _damageType = value;
+        }
+
+        public WeaponRarity RaritySetter
+        {
+            get => _rarity;
+            set => _rarity = value;
         }
 
         public string DescriptionSetter
@@ -144,10 +176,34 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
             set => _duration = Mathf.Max(0, value);
         }
 
+        public float ProjectileSpeedSetter
+        {
+            get => _projectileSpeed;
+            set => _projectileSpeed = Mathf.Max(0.1f, value);
+        }
+
+        public int ProjectileCountSetter
+        {
+            get => _projectileCount;
+            set => _projectileCount = Mathf.Max(1, value);
+        }
+
+        public float KnockbackSetter
+        {
+            get => _knockback;
+            set => _knockback = Mathf.Max(0, value);
+        }
+
         public int UpgradeCostSetter
         {
             get => _upgradeCost;
             set => _upgradeCost = Mathf.Max(0, value);
+        }
+
+        public float UpgradeDamagePerLevelSetter
+        {
+            get => _upgradeDamagePerLevel;
+            set => _upgradeDamagePerLevel = Mathf.Max(0, value);
         }
 
         #endregion
@@ -157,11 +213,18 @@ namespace Game.Runtime.ValueObject.ScriptableObjects
         /// </summary>
         public WeaponDataValue ToDataValue()
         {
-            var data = new WeaponDataValue(_weaponId, _weaponName, _weaponType, _damage, _attackSpeed, _range);
+            var data = new WeaponDataValue(_weaponId, _weaponName, _weaponCategory, _weaponType,
+                _damage, _attackSpeed, _range, _damageType, _rarity);
             data.Pierce = _pierce;
             data.Area = _area;
             data.Duration = _duration;
+            data.ProjectileSpeed = _projectileSpeed;
+            data.ProjectileCount = _projectileCount;
+            data.Knockback = _knockback;
+            data.UpgradeDamagePerLevel = _upgradeDamagePerLevel;
+            data.UpgradeCost = _upgradeCost;
             return data;
         }
     }
 }
+ 

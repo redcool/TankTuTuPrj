@@ -82,7 +82,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerIndex: 0
   _tankPrefab: {fileID: 1330818673432901707, guid: 618a84c41b6152940b6632f6fe5d14a7, type: 3}
-  _tankDataSO: {fileID: 11400000, guid: 2fdccc790a367bc4eb0fe0d72224caf7, type: 2}
   _weaponSlotsRoot: {fileID: 0}
   _modelContainer: {fileID: 0}
 --- !u!54 &7699909922045272979

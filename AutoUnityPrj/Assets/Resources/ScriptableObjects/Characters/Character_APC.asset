@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7497ad52d2f594a834baf60b117faa, type: 3}
+  m_Name: Character_APC
+  m_EditorClassIdentifier:
+  _characterId: apc
+  _characterName: 装甲运兵�?
+  _vehicleType: 2
+  _icon: {fileID: 0}
+  _description: 后勤支援车辆，资源获取专家。高收获、高幸运，经济运营流首选�?
+  _maxHealth: 120
+  _healthRegen: 0.5
+  _lifesteal: 0.01
+  _percentDamage: 0
+  _rangedDamage: 0
+  _meleeDamage: 0
+  _elementDamage: 0
+  _engineering: 0
+  _attackSpeed: 1
+  _critRate: 5
+  _range: 10
+  _aimAccuracy: 0.85
+  _armor: 2
+  _dodge: 5
+  _moveSpeed: 3
+  _luck: 15
+  _harvest: 2
+  _maxHpMod: 0
+  _speedModPercent: 0
+  _attackSpeedModPercent: 0
+  _critChanceMod: 0
+  _armorMod: 0
+  _rangeModPercent: 0
+  _dodgeMod: 0
+  _luckMod: 0
+  _harvestMod: 0
+  _startingWeaponPaths:
+  - ScriptableObjects/Weapons/Weapon_MainCannon_HeavyCannon
+  _isUnlocked: 0
+  _unlockCondition: 通关简单难�?
+  _unlockRequirement: 0
+  _specialAbility: 后勤大师：击杀掉落材料翻�?
+  _specialAbilityType: double_drop 
